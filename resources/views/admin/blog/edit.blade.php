@@ -19,10 +19,11 @@
                         </ul>
                     </div>
                 @endif
+<form action="{{ route('admin.blog.update', ['Blogs' => $blog->id]) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-                <form action="{{ route('admin.blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+
 
                     <div class="row">
                         <!-- Left Column -->

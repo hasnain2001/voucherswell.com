@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('admin.layouts.app')
 
 @section('title', 'Blog Details')
 
@@ -28,12 +28,12 @@
             <h3 class="card-title mb-0">{{ $blog->name }}</h3>
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <span class="badge bg-light text-dark">
-                    <i class="fas fa-user me-1"></i> {{ $blog->user->name }}
+                    <i class="fas fa-user me-1"></i> {{ $blog->user->name ?? 'N/A'}}
                 </span>
-                <span class="badge bg-light text-dark">
+                {{-- <span class="badge bg-light text-dark">
                     <i class="fas fa-calendar me-1"></i>
-                    {{ $blog->created_at->setTimezone('Asia/Karachi')->format('M d, Y') }}
-                </span>
+                    {{ $blog->created_at->setTimezone('Asia/Karachi')->format('M d, Y') ?? 'N/A'}}
+                </span> --}}
                 @if ($blog->status == '1')
                     <span class="badge bg-success">
                         <i class="fas fa-check-circle me-1"></i> Active
@@ -50,7 +50,7 @@
             <!-- Featured Image -->
             <div class="text-center mb-4">
                 <img class="img-fluid rounded shadow"
-                     src="{{ asset('uploads/blogs/' . $blog->image) }}"
+                     src="{{ asset('storage/' . $blog->image) }}"
                      style="max-height: 400px; width: auto; object-fit: cover;"
                      alt="{{ $blog->name }}">
             </div>
@@ -107,7 +107,7 @@
                         {{ $blog->created_at->setTimezone('Asia/Karachi')->format('l, F j, Y h:i A') }}
                     </p>
                 </div>
-                <div class="col-md-6">
+                 <div class="col-md-6">
                     <p><i class="fas fa-calendar-check me-1"></i>
                         <strong>Last Updated:</strong>
                         {{ $blog->updated_at->setTimezone('Asia/Karachi')->format('l, F j, Y h:i A') }}
@@ -118,6 +118,12 @@
     </div>
 </div>
 
+
+@endsection
+@push('scripts')
+@endpush
+
+@push('styles')
 <style>
     .card-header.bg-gradient-primary {
         background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
@@ -137,4 +143,4 @@
         overflow: hidden;
     }
 </style>
-@endsection
+@endpush

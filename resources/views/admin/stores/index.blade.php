@@ -63,12 +63,14 @@
                     @method('DELETE')
 
                     <div class="table-responsive">
-                        <table id="datatable-buttons" class="table table-hover table-centered mb-0 dt-responsive nowrap w-100">
+                        <table id="basic-datatable" class="table table-hover table-centered mb-0 dt-responsive nowrap w-100">
                             <thead class="table-light">
                                 <tr>
                                     <th><input type="checkbox" id="selectAll" class="form-check-input"></th>
                                     <th>ID</th>
                                     <th>Name</th>
+                                    <th>Slug</th>
+                                    <th>Image</th>
                                     <th>Category</th>
                                     <th>Network</th>
                                     <th>Language</th>

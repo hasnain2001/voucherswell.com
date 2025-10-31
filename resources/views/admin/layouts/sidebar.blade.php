@@ -1,6 +1,8 @@
     <div class="sidebar text-capitalize">
         <div class="sidebar-brand">
+            <a href="{{ route('admin.dashboard') }}" target="_blank" rel="noopener noreferrer">
             <x-application-logo class="logo"/>
+            </a>
         </div>
         <div class="sidebar-menu">
             <ul class="nav flex-column">
@@ -63,6 +65,27 @@
                              <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.coupon.create') }}">
                                   <i class="fas fa-list-ul"></i> add coupon
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#slider">
+                         <i class="fas fa-list-ul"></i> slider
+                        <i class="fas fa-angle-down menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="slider">
+                        <ul class="submenu nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.slider.index') }}">
+                                  <i class="fas fa-list-ul"></i> all slider
+                                </a>
+                            </li>
+                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.slider.create') }}">
+                                  <i class="fas fa-list-ul"></i> add slider
                                 </a>
                             </li>
 

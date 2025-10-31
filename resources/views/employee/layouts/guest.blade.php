@@ -1,30 +1,186 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employeee Dashboard - @yield('title')</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- ✅ Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- ✅ Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+    <!-- ✅ DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+    <!-- ✅ jQuery UI (for drag & drop + autocomplete) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <!-- ✅ Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- ✅ Custom Admin CSS -->
+    <link rel="stylesheet" href="{{ asset('admin/css/app.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/app.css') }}">
+
+    @stack('styles')
+
+    <style>
+        /* ✨ Optional styling for sortable handle hover */
+        .handle {
+            cursor: grab;
+        }
+        .handle:active {
+            cursor: grabbing;
+        }
+        tr.ui-sortable-helper {
+            background: #f8f9fa;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+
+    <!-- ✅ Sidebar -->
+    @include('employee.layouts.sidebar')
+
+    <!-- ✅ Main Content -->
+    <div class="main-content">
+        @include('employee.layouts.navigation')
+
+        <div class="page-content">
+            @yield('content')
+
+            {{-- <!-- ✅ Footer -->
+            <footer class="footer mt-auto py-3 bg-light border-top">
+                <div class="container-fluid d-flex justify-content-between text-muted small">
+                    <span>&copy; {{ date('Y') }} Ubold. All rights reserved.</span>
+                    <span>Design & Developed by Themesbrand</span>
+                </div>
+            </footer> --}}
         </div>
-    </body>
+    </div>
+
+    <!-- ✅ Load JS in correct order -->
+
+    <!-- jQuery FIRST -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery UI SECOND (for sortable + autocomplete) -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <!-- Bootstrap Bundle THIRD -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- ✅ CKEditor (optional for forms) -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
+    <script src="{{ asset('admin/js/ck-editor.js') }}"></script>
+
+    <!-- ✅ Custom App JS -->
+    <script src="{{ asset('admin/js/app.js') }}"></script>
+
+    <!-- ✅ Global Scripts -->
+    <script>
+        // 🔍 Autocomplete Search (optional)
+        $(function() {
+            $('#searchInput').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{{ route("employee.search") }}',
+                        dataType: 'json',
+                        data: { query: request.term },
+                        success: function(data) {
+                            response(data.stores || []);
+                        }
+                    });
+                },
+                minLength: 1
+            });
+        });
+    </script>
+
+    <!-- ✅ DataTables Initialization (Optional global setup) -->
+    <script>
+          $(document).ready(function () {
+            const table = $('#basic-datatable').DataTable({
+                responsive: true,
+                ordering: false,
+                paging: false, // disable paging for full drag functionality
+                lengthChange: false,
+                searching: true,
+                info: false
+            });
+
+            // Make table body sortable
+            $('#tablecontents').sortable({
+                items: 'tr.row1',
+                cursor: 'move',
+                opacity: 0.8,
+                handle: '.handle',
+                helper: function(e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(index) {
+                        $(this).width($originals.eq(index).width());
+                    });
+                    return $helper;
+                },
+                start: function(e, ui){
+                    ui.placeholder.height(ui.item.height());
+                },
+                update: function () {
+                    sendOrderToServer();
+                }
+            });
+
+            function sendOrderToServer() {
+                var order = [];
+                var token = '{{ csrf_token() }}';
+
+                $('#tablecontents tr').each(function (index, element) {
+                    order.push({
+                        id: $(this).data("id"),
+                        position: index + 1
+                    });
+                });
+
+                $.ajax({
+                    url: "{{ route('employee.coupon.update-order') }}",
+                    method: "POST",
+                    data: {
+                        order: order,
+                        _token: token
+                    },
+                    success: function (response) {
+                        if (response.status === "success") {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error("Error while updating order.");
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+
+    @stack('scripts')
+</body>
 </html>

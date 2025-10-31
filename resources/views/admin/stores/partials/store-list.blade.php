@@ -3,6 +3,8 @@
                                     <td><input type="checkbox" class="form-check-input select-checkbox" name="selected[]" value="{{ $store->id }}"></td>
                                     <td>{{ $store->id }}</td>
                                     <td>{{ $store->name }}</td>
+                                    <td>{{ $store->slug }}</td>
+                                    <td><img src="{{ asset('storage/' . $store->image) }}" alt="{{ $store->name }}" class="img-thumbnail"></td>
                                     <td>{{ $store->category->name ?? 'N/A' }}</td>
                                     <td>{{ $store->network->title ?? 'N/A' }}</td>
                                     <td>{{ $store->language->name ?? 'N/A' }}</td>
@@ -14,7 +16,13 @@
                                         @endif
                                     </td>
                                     <td>
+                                        @if ($store->user)
+                                            <small>Created by: {{ $store->user->name }}</small><br>
+                                        @endif
                                         <small>Created: {{ $store->created_at->diffForHumans() }}</small><br>
+                                        @if ($store->updatedby)
+                                            <small>Updated by: {{ $store->updatedby->name }}</small> <br>
+                                        @endif
                                         <small>Updated: {{ $store->updated_at->diffForHumans() }}</small>
                                     </td>
                                     <td class="d-flex gap-1">

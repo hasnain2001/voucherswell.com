@@ -115,33 +115,45 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating position-relative">
-                                <input type="password" class="form-control shadow-sm" id="password" name="password"
-                                       placeholder="New Password" minlength="8"
-                                       oninput="validatePassword()">
-                                <label for="password" class="form-label">
-                                    <i class="fas fa-key me-2 text-primary"></i>New Password
-                                </label>
-                                <span class="position-absolute top-50 end-0 translate-middle-y pe-3">
-                                    <i class="fas fa-eye-slash toggle-password text-muted"
-                                       onclick="togglePassword('password')" style="cursor: pointer;"></i>
-                                </span>
-                                <div class="invalid-feedback">
-                                    Password must be at least 8 characters long.
-                                </div>
-                                <div class="valid-feedback">
-                                    Strong password!
-                                </div>
-                                <div class="password-strength mt-2">
-                                    <div class="progress" style="height: 4px;">
-                                        <div class="progress-bar" id="passwordStrength" role="progressbar"
-                                             style="width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                    <small class="text-muted" id="passwordHint">Leave blank to keep current password</small>
-                                </div>
-                            </div>
-                        </div>
+                      <div class="col-md-6">
+    <div class="form-floating position-relative">
+        <!-- Add a hidden dummy password field to trick autofill -->
+        <input type="password" class="d-none" autocomplete="new-password">
+
+        <input type="password"
+               class="form-control shadow-sm"
+               id="password"
+               name="password"
+               placeholder="New Password"
+               minlength="8"
+               autocomplete="new-password"
+               oninput="validatePassword()">
+
+        <label for="password" class="form-label">
+            <i class="fas fa-key me-2 text-primary"></i>New Password
+        </label>
+
+        <span class="position-absolute top-50 end-0 translate-middle-y pe-3">
+            <i class="fas fa-eye-slash toggle-password text-muted"
+               onclick="togglePassword('password')" style="cursor: pointer;"></i>
+        </span>
+
+        <div class="invalid-feedback">
+            Password must be at least 8 characters long.
+        </div>
+        <div class="valid-feedback">
+            Strong password!
+        </div>
+        <div class="password-strength mt-2">
+            <div class="progress" style="height: 4px;">
+                <div class="progress-bar" id="passwordStrength" role="progressbar"
+                     style="width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+            <small class="text-muted" id="passwordHint">Leave blank to keep current password</small>
+        </div>
+    </div>
+</div>
+
 
                         <div class="col-md-6">
                             <div class="form-floating position-relative">

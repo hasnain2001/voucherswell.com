@@ -3,211 +3,6 @@
     Update Coupon
 @endsection
 @section('content')
-<style>
-    .card {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: none;
-        border-radius: 8px;
-    }
-
-    .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #eee;
-        padding: 15px 20px;
-        border-radius: 8px 8px 0 0 !important;
-    }
-
-    .card-body {
-        padding: 25px;
-    }
-
-    .form-control, .form-select {
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        padding: 10px 15px;
-        font-size: 14px;
-        transition: all 0.3s;
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-
-    label {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 8px;
-    }
-
-    .required-field::after {
-        content: " *";
-        color: #dc3545;
-    }
-
-    .btn {
-        padding: 8px 20px;
-        border-radius: 4px;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background-color: #4e73df;
-        border-color: #4e73df;
-    }
-
-    .btn-primary:hover {
-        background-color: #3a5ec4;
-        border-color: #3a5ec4;
-    }
-
-    .btn-warning {
-        background-color: #f6c23e;
-        border-color: #f6c23e;
-        color: #fff;
-    }
-
-    .btn-warning:hover {
-        background-color: #e4b030;
-        border-color: #e4b030;
-    }
-
-    .btn-secondary {
-        background-color: #858796;
-        border-color: #858796;
-    }
-
-    .btn-secondary:hover {
-        background-color: #717384;
-        border-color: #717384;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-check {
-        margin-bottom: 10px;
-    }
-
-    .form-check-input {
-        margin-top: 0.3em;
-    }
-
-    .form-group-inline {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .form-group-inline .form-check {
-        margin-bottom: 0;
-    }
-
-    .toggle-switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-        margin-left: 10px;
-    }
-
-    .toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 24px;
-    }
-
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked + .toggle-slider {
-        background-color: #4e73df;
-    }
-
-    input:checked + .toggle-slider:before {
-        transform: translateX(26px);
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #4e73df;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .auth-options {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    .auth-option {
-        background: #f8f9fa;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #eee;
-        transition: all 0.3s;
-    }
-
-    .auth-option:hover {
-        background: #e9ecef;
-        border-color: #ddd;
-    }
-
-    .auth-option.active {
-        background: #e7f1ff;
-        border-color: #4e73df;
-    }
-
-    .top-coupon-options {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .top-coupon-option {
-        display: flex;
-        align-items: center;
-    }
-
-    @media (max-width: 768px) {
-        .auth-options {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group-inline {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-    }
-</style>
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -428,6 +223,216 @@
     </section>
 </div>
 
+
+@endsection
+@push('styles')
+<style>
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #eee;
+        padding: 15px 20px;
+        border-radius: 8px 8px 0 0 !important;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .btn-primary:hover {
+        background-color: #3a5ec4;
+        border-color: #3a5ec4;
+    }
+
+    .btn-warning {
+        background-color: #f6c23e;
+        border-color: #f6c23e;
+        color: #fff;
+    }
+
+    .btn-warning:hover {
+        background-color: #e4b030;
+        border-color: #e4b030;
+    }
+
+    .btn-secondary {
+        background-color: #858796;
+        border-color: #858796;
+    }
+
+    .btn-secondary:hover {
+        background-color: #717384;
+        border-color: #717384;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .form-check-input {
+        margin-top: 0.3em;
+    }
+
+    .form-group-inline {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group-inline .form-check {
+        margin-bottom: 0;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        margin-left: 10px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #4e73df;
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #4e73df;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .auth-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .auth-option {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #eee;
+        transition: all 0.3s;
+    }
+
+    .auth-option:hover {
+        background: #e9ecef;
+        border-color: #ddd;
+    }
+
+    .auth-option.active {
+        background: #e7f1ff;
+        border-color: #4e73df;
+    }
+
+    .top-coupon-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .top-coupon-option {
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .auth-options {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group-inline {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+</style>
+@endpush
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize code input toggle
@@ -492,4 +497,5 @@
         }
     }
 </script>
-@endsection
+@endpush
+

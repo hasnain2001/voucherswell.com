@@ -104,7 +104,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script >
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -180,9 +180,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-@endsection
+@endpush
 
-@section('styles')
+@push('styles')
 <style>
     .cursor-grab {
         cursor: grab;
@@ -214,4 +214,4 @@ document.addEventListener('DOMContentLoaded', function() {
         transform: scale(1.2);
     }
 </style>
-@endsection
+@endpush

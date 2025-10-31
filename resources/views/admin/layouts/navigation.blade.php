@@ -4,25 +4,22 @@
         <!-- Logo and Brand -->
         <a class="navbar-brand" href="{{ route('dashboard') }}">
             <div class="d-flex align-items-center">
-                
+
                 <span class="brand-text">AdminPanel</span>
             </div>
         </a>
-
-        <!-- Desktop Navigation Links -->
+          <!-- Desktop Navigation Links -->
         <div class="navbar-nav mx-auto">
             <div class="d-flex align-items-center">
-                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-home me-1"></i> Dashboard
                 </a>
-                <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="#">
-                    <i class="fas fa-users me-1"></i> Users
+
+                <a class="nav-link {{ request()->routeIs('admin.store.*') ? 'active' : '' }}" href="{{ route('admin.store.index') }}">
+                   <i class="fas fa-store"></i> store
                 </a>
-                <a class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}" href="#">
-                    <i class="fas fa-box me-1"></i> Products
-                </a>
-                <a class="nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}" href="#">
-                    <i class="fas fa-shopping-cart me-1"></i> Orders
+                <a class="nav-link {{ request()->routeIs('coupon.*') ? 'active' : '' }}" href="{{ route('admin.coupon.index') }}">
+                   <i class="fas fa-list-ul"></i> coupon
                 </a>
             </div>
         </div>
@@ -31,8 +28,10 @@
         <div class="d-flex align-items-center">
             <!-- Search Box -->
             <div class="search-box me-3">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="form-control" placeholder="Search...">
+              <form role="search" class="position-relative d-flex align-items-center" action="{{ route('admin.search') }}" method="GET">
+                    <i class="fas fa-search search-icon"></i>
+                <input type="text" class="form-control" name="query" id="searchInput" placeholder="Search store here..." aria-label="Search">
+                </form>
             </div>
 
             <!-- Notifications -->
@@ -93,7 +92,7 @@
                     </div>
                     <div class="user-info d-none d-md-block">
                         <div class="user-name">{{ Auth::user()->name }}</div>
-                        <div class="user-role text-muted">Administrator</div>
+                        <div class="user-role text-muted">{{ Auth::user()->email }}</div>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -242,7 +241,7 @@
             <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=5b73e8&color=ffffff"
                  alt="{{ Auth::user()->name }}" class="rounded-circle mb-3" width="80" height="80">
             <h6 class="text-dark mb-1">{{ Auth::user()->name }}</h6>
-            <p class="text-muted small mb-3">Administrator</p>
+            <p class="text-muted small mb-3"> {{ Auth::user()->email }} </p>
             <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary btn-sm">
                 <i class="fas fa-edit me-1"></i> Edit Profile
             </a>

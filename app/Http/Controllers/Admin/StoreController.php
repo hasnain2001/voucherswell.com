@@ -150,14 +150,14 @@ public function store(Request $request)
     /**
      * Show the form for editing the specified resource.
      */
-   public function edit(Store $store)
-{
-    $categories = Category::orderBy('created_at', 'desc')->get();
-    $networks = Network::orderBy('created_at', 'desc')->get();
-    $languages = Language::orderBy('created_at', 'desc')->get();
+        public function edit(Store $store)
+        {
+            $categories = Category::orderBy('created_at', 'desc')->get();
+            $networks = Network::orderBy('created_at', 'desc')->get();
+            $languages = Language::orderBy('created_at', 'desc')->get();
 
-    return view('admin.stores.edit', compact('store', 'categories', 'networks', 'languages'));
-}
+            return view('admin.stores.edit', compact('store', 'categories', 'networks', 'languages'));
+        }
 
 
     /**

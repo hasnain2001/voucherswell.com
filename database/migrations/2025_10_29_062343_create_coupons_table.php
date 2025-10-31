@@ -13,7 +13,7 @@ return new class extends Migration
     {
           Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('language_id')->nullable()->constrained('languages')->nullOnDelete();
             $table->foreignId('updated_id')->nullable()->constrained('users')->nullOnDelete();

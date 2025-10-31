@@ -23,13 +23,23 @@ class Coupon extends Model
         'updated_id',
 
     ];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 
     protected $casts = [
         'ending_date' => 'datetime',
+
     ];
+
+    public function stores()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
     public function store()
     {
-        return $this->belongsTo(Store::class,);
+        return $this->belongsTo(Store::class, 'store_id');
     }
      public function language()
     {

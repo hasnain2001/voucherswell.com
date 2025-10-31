@@ -26,7 +26,7 @@
         <td>
             <div class="d-flex align-items-center">
                 <i class="fas fa-store text-info me-2"></i>
-                <span>{{ $coupon->store->name }}</span>
+                <span>{{ $coupon->store->name ?? 'null'}}</span>
             </div>
         </td>
         <td>

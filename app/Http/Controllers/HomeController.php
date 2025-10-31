@@ -81,7 +81,7 @@ class HomeController extends Controller
                         ->orderBy('created_at','desc')
                         ->paginate(10);
 
-        return view('stores', compact('stores'));
+        return view('front-end.stores', compact('stores'));
     }
 
 
@@ -159,7 +159,7 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        return view('store_detail', compact('store', 'coupons', 'relatedStores','relatedblogs','codeCount', 'dealCount'));
+        return view('front-end.store_detail', compact('store', 'coupons', 'relatedStores','relatedblogs','codeCount', 'dealCount'));
     }
 
     public function category($lang = 'en')
@@ -174,7 +174,7 @@ class HomeController extends Controller
         // Filter categories by language_id
         $categories = Category::where('language_id', $language->id)->paginate(10);
 
-        return view('category', compact('categories'));
+        return view('front-end.category', compact('categories'));
     }
 
 
@@ -204,7 +204,7 @@ class HomeController extends Controller
         $stores = Store::where('category_id', $category->id)
         ->where('language_id', $category->language_id)->get();
 
-        return view('category_detail', compact('category','relatedblogs','stores'));
+        return view('front-end.category_detail', compact('category','relatedblogs','stores'));
     }
 
     public function blog($lang = 'en')
@@ -221,7 +221,7 @@ class HomeController extends Controller
             ->where('language_id', $language->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        return view('blog', compact('blogs'));
+        return view('front-end.blog', compact('blogs'));
     }
 
 
@@ -251,7 +251,7 @@ class HomeController extends Controller
         $relatedstores = Store::where('category_id', $blog->category_id)
         ->where('language_id', $blog->language_id)->get();
 
-        return view('blog_detail', compact('blog', 'relatedBlogs','relatedstores'));
+        return view('front-end.blog_detail', compact('blog', 'relatedBlogs','relatedstores'));
     }
 
     public function coupons ($lang = 'en')
@@ -271,7 +271,7 @@ class HomeController extends Controller
             ->where('status', 1)
             ->paginate(10);
 
-            return view('coupon', compact('coupons'));
+            return view('front-end.coupon', compact('coupons'));
     }
 
     public function deal ($lang = 'en')
@@ -290,7 +290,7 @@ class HomeController extends Controller
             ->whereNull('code')
             ->paginate(10);
 
-            return view('deal', compact('coupons'));
+            return view('front-end.deal', compact('coupons'));
     }
 
      public function coupon_detail($slug, $lang = 'en')
@@ -315,7 +315,7 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
-        return view('coupon_detail', compact('blog', 'relatedcoupon'));
+        return view('front-end.coupon_detail', compact('blog', 'relatedcoupon'));
     }
 
 }

@@ -48,18 +48,18 @@ class CouponController extends Controller
     public function index(Request $request)
     {
         // Get distinct stores with coupons
-        $stores = Coupon::with('store', 'user', 'updatedby')
+        $stores = Coupon::with('stores', 'user', 'updatedby')
                     ->select('store_id')
                     ->distinct()
                     ->get()
-                    ->pluck('store')
+                    ->pluck('stores')
                     ->unique()
                     ->filter();
 
         $selectedStore = $request->input('store_id');
 
         if ($request->ajax()) {
-            $coupons = Coupon::with('store', 'user', 'updatedby')
+            $coupons = Coupon::with('stores', 'user', 'updatedby')
                         ->when($selectedStore, function($query) use ($selectedStore) {
                             return $query->where('store_id', $selectedStore);
                         })

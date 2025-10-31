@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Category;
@@ -88,15 +88,12 @@ class BlogController extends Controller
     /**
      * Display the specified resource.
      */
-  public function show($name)
+  public function show(Blog $blog)
     {
-        $slug = Str::slug($name);
-        $title = ucwords(str_replace('-', ' ', $slug));
-        $blog = Blog::where('slug', $title)->first();
-
-        if (!$blog) {
-            return redirect('404');
-        }
+        if (!$blog)
+             {
+                abort(404);
+            }
 
         // Get store$store where store_id matches the store's ID
         $store = Store::with('user')
@@ -106,15 +103,18 @@ class BlogController extends Controller
         return view('admin.blog.show', compact('blog', 'store'));
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Blog $blog)
+
+        public function edit(Blog $blog)
     {
-         $categories = Category::orderBy('created_at', 'desc')->get();
+        $categories = Category::orderBy('created_at', 'desc')->get();
         $languages = language::orderBy('created_at', 'desc')->get();
         $stores = Store::orderBy('created_at', 'desc')->get();
-        return view('admin.blog.edit', compact('blog', 'categories', 'languages', 'stores'));
+
+       return view('admin.blog.edit', compact('blog', 'categories', 'languages', 'stores'));
     }
 
     /**
