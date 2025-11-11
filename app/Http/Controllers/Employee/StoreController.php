@@ -106,18 +106,18 @@ public function store(Request $request)
     $store->save(); // ✅ We now have $store->id
 
     // Step 2: Handle image upload (after ID is known)
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $storeNameSlug = Str::slug($request->slug);
-        $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
+           if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $storeNameSlug = Str::slug($request->slug);
+                $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
 
-        // Store image in storage/app/public/stores/{id}/
-        $path = $image->storeAs("stores", $imageName, 'public');
+                // Store in storage/app/public/stores/
+                $path = $image->storeAs('stores', $imageName, 'public');
 
-        // Update store image path
-        $store->image = $path;
-        $store->save();
-    }
+
+                $store->image = basename($path);
+                $store->save();
+            }
 
     return redirect()->route('employee.store.show', $store->id)->with('success', 'Store created successfully.');
 }
@@ -187,20 +187,17 @@ public function store(Request $request)
         // 🖼 Handle image upload
         $imagePath = $store->image; // Keep old image by default
 
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($store->image && Storage::disk('public')->exists($store->image)) {
-                Storage::disk('public')->delete($store->image);
-            }
+                if ($request->hasFile('image')) {
+    if ($store->image && Storage::disk('public')->exists('stores/' . $store->image)) {
+        Storage::disk('public')->delete('stores/' . $store->image);
+    }
 
-            // Save new image in storage/app/public/stores/{id}/
-               $image = $request->file('image');
-        $storeNameSlug = Str::slug($request->slug);
-        $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
-
-        // Store image in storage/app/public/stores/{id}/
-        $imagePath = $image->storeAs("stores", $imageName, 'public');
-        }
+    $image = $request->file('image');
+    $imageName = Str::slug($request->slug) . '.' . $image->getClientOriginalExtension();
+    $image->storeAs('stores', $imageName, 'public');
+     $path = $image->storeAs('stores', $imageName, 'public');
+    $store->image = basename($path);
+}
 
         // 🧾 Update store data
         $store->update([

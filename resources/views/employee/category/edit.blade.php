@@ -42,6 +42,10 @@
                             <label for="slug" class="form-label fw-semibold">Category Slug/Url</label>
                             <input type="text" name="slug" id="slug" class="form-control" value="{{ $category->slug }}" required>
                         </div>
+                          <div class="col-md-6">
+                            <label for="title" class="form-label fw-semibold">Meta title</label>
+                            <input type="text" class="form-control" name="title" id="title" value="{{ $category->title }}">
+                        </div>
                         <div class="col-md-6">
                             <label for="meta_keyword" class="form-label fw-semibold">Meta Keyword</label>
                             <input type="text" class="form-control" name="meta_keyword" id="meta_keyword" value="{{ $category->meta_keyword }}">

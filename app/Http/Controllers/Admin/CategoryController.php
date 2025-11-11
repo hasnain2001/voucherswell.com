@@ -62,7 +62,7 @@ class CategoryController extends Controller
 
         // Step 2: Store image in folder named after category ID
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store("category/{$category->id}", 'public');
+            $path = $request->file('image')->store("category", 'public');
             $category->image = $path;
             $category->save(); // update image path
         }
@@ -114,7 +114,7 @@ class CategoryController extends Controller
             }
 
             // Store new image inside category/{id}/ folder
-            $imagePath = $request->file('image')->store("category/{$category->id}", 'public');
+            $imagePath = $request->file('image')->store("category", 'public');
         }
 
         // Update category

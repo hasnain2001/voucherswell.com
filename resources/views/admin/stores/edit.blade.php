@@ -180,7 +180,7 @@
                                         @if($store->image)
                                             <div class="mt-2">
                                                 <input type="hidden" name="previous_image" value="{{ $store->image }}">
-                                                <img src="{{ asset('storage/' . $store->image) }}" alt="Current Store Image" class="img-thumbnail" style="max-width: 200px;">
+                                                <img src="{{ asset('storage/stores/' . $store->image) }}" alt="Current Store Image" class="img-thumbnail" style="max-width: 200px;">
 
                                             </div>
                                         @else

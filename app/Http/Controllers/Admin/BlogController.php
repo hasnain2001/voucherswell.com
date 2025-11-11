@@ -68,18 +68,16 @@ class BlogController extends Controller
         $blog->save();
 
 
-           if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $storeNameSlug = Str::slug($request->slug);
-        $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
+             if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $storeNameSlug = Str::slug($request->slug);
+                $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('blogs', $imageName, 'public');
 
-        // Store image in storage/app/public/stores/{id}/
-        $path = $image->storeAs("blogs", $imageName, 'public');
 
-        // Update store image path
-        $blog->image = $path;
-        $blog->save();
-    }
+                $blog->image = basename($path);
+                $blog->save();
+            }
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog created successfully.');
     }
@@ -137,16 +135,17 @@ class BlogController extends Controller
         ]);
 
         // 🖼 Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($blog->image && Storage::disk('public')->exists($blog->image)) {
-                Storage::disk('public')->delete($blog->image);
-            }
+             if ($request->hasFile('image')) {
+                if ($blog->image && Storage::disk('public')->exists('blogs/' . $blog->image)) {
+                    Storage::disk('public')->delete('stores/' . $blog->image);
+                }
 
-            // Store new image inside storage/app/public/blogs/{id}/
-            $imagePath = $request->file('image')->store("blogs/{$blog->id}", 'public');
-            $blog->image = $imagePath;
-        }
+                $image = $request->file('image');
+                $imageName = Str::slug($request->slug) . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('stores', $imageName, 'public');
+                $path = $image->storeAs('blogs', $imageName, 'public');
+                $blog->image = basename($path);
+            }
 
         // 📝 Update all other fields
         $blog->updated_id = Auth::id();

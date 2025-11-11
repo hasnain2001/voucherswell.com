@@ -177,7 +177,7 @@
         color: #22223b;
         letter-spacing: 1px;
         text-transform: uppercase;
-        background: linear-gradient(90deg, var(--second-primary) 0%, var(--second-primary) 100%);
+        background:var(--second-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -302,32 +302,8 @@
     border: 1px solid #e0e0e0;
 }
 
-/* Button Styles with Hidden Code */
-.get-code-btn {
-    padding: 10px 20px;
-    background-color: var(--second-primary);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    text-transform: uppercase;
-}
 
-.get-code-btn:hover {
-    color: white;
-    background-color: #ea0b1e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
 
-.get-code-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
-}
 
 .btn-text {
     flex-grow: 1;
@@ -361,7 +337,7 @@
     height: 0;
     border-style: solid;
     border-width: 0 30px 30px 0;
-    border-color: transparent #ff6b6b transparent transparent;
+    border-color: transparent var(--primary-dark) transparent transparent;
 }
 
 /* Other styles remain the same as previous example */
@@ -433,21 +409,6 @@
     box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
 
-.deal-btn {
-    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-    color: #333;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-}
-
-.deal-btn:hover {
-    background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
-    color: #333;
-    transform: translateY(-2px);
-}
 
 .coupon-footer {
     position: relative;
@@ -483,3 +444,25 @@
     .transition-all {
         transition: all 0.3s ease;
     }
+    .text-golden{
+        color: var(--primary);
+
+    }
+    .bg-golden{
+        background: var(--primary);
+    }
+    .btn-golden{
+        background: var(--primary);
+        color: white;
+    }
+    .btn-golden:hover{
+        background: var(--primary-dark);
+    }
+    .btn-link-golden{
+        color: var(--primary);
+    }
+    .btn-link-golden:hover{
+        color: var(--primary-dark);
+    }
+
+

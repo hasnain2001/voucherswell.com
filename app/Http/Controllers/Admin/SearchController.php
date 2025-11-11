@@ -19,11 +19,8 @@ class SearchController extends Controller
         // Check if there is a single store matching the query exactly
         $store = Store::where('slug', $query)->first();
 
-        if ($store) {
-                       $formattedSlug = str_replace(' ', '-', $store->slug);
-
-
-            return redirect()->route('admin.store.show', ['slug' => $formattedSlug ]);
+         if ($store) {
+           return redirect()->route('admin.store.show',  $store->id);
         }
 
         // If no exact match, return JSON response for autocomplete if the request is AJAX

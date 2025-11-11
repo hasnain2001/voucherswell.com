@@ -1,10 +1,10 @@
-@extends('layouts.welcome')
+@extends('layouts.master')
 @section('title', $blog->name . ' | ' . config('app.name'))
 @section('description', 'Explore our latest blog post: ' . $blog->name . '. ' . $blog->description)
 @section('keywords', $blog->keywords)
 @section('author', $blog->author ?? 'Unknown')
 
-@section('main')
+@section('content')
 <div class="bg-light min-vh-100 py-0">
     <div class="container">
         <!-- Breadcrumb -->
@@ -30,7 +30,7 @@
             <div class="col-12 col-md-8">
                 <div class="card shadow-lg border-0 mb-4">
                     <div class="position-relative ratio ratio-16x9">
-                        <img src="{{ $blog->image ? asset('uploads/blogs/' . $blog->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                        <img src="{{ $blog->image ? asset('storage/blogs/' . $blog->image) : asset('front/assets/images/no-image-found.jpg') }}"
                              alt="{{ $blog->name }}"
                              class="card-img-top object-fit-cover rounded-top"
                              loading="lazy"
@@ -71,7 +71,7 @@
                                     <a href="{{ route('store.detail', ['slug' => Str::slug($store->slug)]) }}"
                                        class="d-flex align-items-center text-decoration-none hover-bg-light rounded-2 p-2 transition shadow-sm"
                                        style="transition: box-shadow 0.2s;">
-                                        <img src="{{ $store->image ? asset('uploads/stores/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                                        <img src="{{ $store->image ? asset('storage/stores/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
                                              alt="{{ $store->name }}"
                                              class="rounded me-3 object-fit-fill border"
                                              style="width: 60px; height: 60px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">

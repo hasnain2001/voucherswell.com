@@ -73,7 +73,6 @@ class BlogController extends Controller
         $storeNameSlug = Str::slug($request->slug);
         $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
 
-        // Store image in storage/app/public/stores/{id}/
         $path = $image->storeAs("blogs", $imageName, 'public');
 
         // Update store image path
@@ -142,9 +141,7 @@ class BlogController extends Controller
             if ($blog->image && Storage::disk('public')->exists($blog->image)) {
                 Storage::disk('public')->delete($blog->image);
             }
-
-            // Store new image inside storage/app/public/blogs/{id}/
-            $imagePath = $request->file('image')->store("blogs/{$blog->id}", 'public');
+            $imagePath = $request->file('image')->store("blogs", 'public');
             $blog->image = $imagePath;
         }
 

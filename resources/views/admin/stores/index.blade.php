@@ -67,6 +67,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                                    <th>#</th>
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Slug</th>
@@ -100,75 +101,98 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function () {
-    // Filter by language
-    $('#languageSelect').on('change', function () {
-        const languageId = $(this).val();
-        fetch(`{{ route('admin.store.index') }}?language_id=${languageId}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.json())
-        .then(data => $('#storeList').html(data.html));
-    });
+    $(document).ready(function () {
 
-    // Select all checkboxes
-    $('#selectAll').on('click', function () {
-        $('.select-checkbox').prop('checked', this.checked);
-    });
 
-    // Bulk delete
-    $('#deleteSelected').click(function (e) {
-        e.preventDefault();
-        const selected = $('.select-checkbox:checked').length;
-        if (selected > 0) {
+        // Then your other store-specific JavaScript
+        // Filter by language
+        $('#languageSelect').on('change', function () {
+            const languageId = $(this).val();
+            fetch(`{{ route('admin.store.index') }}?language_id=${languageId}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#storeList').html(data.html);
+                // Re-initialize DataTables after content update
+                $('#basic-datatable').DataTable().destroy();
+                $('#basic-datatable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    lengthChange: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    autoWidth: false,
+                    pageLength: 10
+                });
+            });
+        });
+
+        // Select all checkboxes
+        $('#selectAll').on('click', function () {
+            $('.select-checkbox').prop('checked', this.checked);
+        });
+
+        // Bulk delete
+        $('#deleteSelected').click(function (e) {
+            e.preventDefault();
+            const selected = $('.select-checkbox:checked').length;
+            if (selected > 0) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `You are about to delete ${selected} store(s).`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete them!'
+                }).then(result => {
+                    if (result.isConfirmed) $('#deleteForm').submit();
+                });
+            } else {
+                Swal.fire('No Selection', 'Please select at least one store to delete.', 'info');
+            }
+        });
+
+        // Single delete via anchor tag
+        $(document).on('click', '.delete-store-btn', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
             Swal.fire({
-                title: 'Are you sure?',
-                text: `You are about to delete ${selected} store(s).`,
+                title: 'Delete Store?',
+                text: 'This action cannot be undone!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete them!'
-            }).then(result => {
-                if (result.isConfirmed) $('#deleteForm').submit();
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/store/${id}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $(`#store-row-${id}`).remove();
+                                Swal.fire('Deleted!', 'Store has been deleted.', 'success');
+                                // Optional: reload the table
+                                table.ajax.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error!', 'Something went wrong while deleting.', 'error');
+                        }
+                    });
+                }
             });
-        } else {
-            Swal.fire('No Selection', 'Please select at least one store to delete.', 'info');
-        }
-    });
-
-    // Single delete via anchor tag
-    $(document).on('click', '.delete-store-btn', function () {
-        const id = $(this).data('id');
-        Swal.fire({
-            title: 'Delete Store?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `/admin/store/${id}`,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function () {
-                        $(`#store-row-${id}`).remove();
-                        Swal.fire('Deleted!', 'Store has been deleted.', 'success');
-                    },
-                    error: function () {
-                        Swal.fire('Error!', 'Something went wrong while deleting.', 'error');
-                    }
-                });
-            }
         });
     });
-});
 </script>
 @endpush
 

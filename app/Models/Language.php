@@ -43,15 +43,17 @@ class Language extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-      public function getUrlAttribute()
-    {
-        return asset('storage/' . $this->filename);
-    }
+
 
     // ✅ Optional: Thumbnail URL (you can use same filename)
-    public function getThumbnailUrlAttribute()
+          public function getImageUrlAttribute()
     {
-        return asset('storage/' . $this->filename);
+        if ($this->image && file_exists(storage_path('app/public/' . $this->image))) {
+            return asset('storage/' . $this->image);
+        }
+
+        // Optional: fallback image if none exists
+        return asset('assets/img/default-store.png');
     }
 
 }

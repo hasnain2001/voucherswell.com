@@ -1,4 +1,4 @@
-@extends('employee.layouts.guest')
+@extends('admin.layouts.guest')
 @section('title','category')
 @section('content')
 <div class="container-fluid">

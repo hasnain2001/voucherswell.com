@@ -1,13 +1,36 @@
-@extends('layouts.welcome')
+@extends('layouts.master')
+{{-- 🏷️ Page Title --}}
 @section('title')
-    {!! $category->title !!}
+@if (!empty($category->meta_title))
+    {{ ucwords($category->meta_title) }} | {{ date('Y') }} Coupons, Deals & Offers
+@elseif (!empty($category->title))
+    {{ ucwords($category->title) }} | {{ date('Y') }} Coupons & Discount Codes
+@else
+    {{ ucwords($category->name) }} | {{ date('Y') }} Deals, Offers & Promo Codes
+@endif
 @endsection
+
+{{-- 📝 Meta Description --}}
 @section('description')
-    {!! $category->meta_description !!}
+@if (!empty($category->meta_description))
+    {{ ucfirst($category->meta_description) }}
+@else
+    Find the best {{ ucwords($category->name) }} deals and verified discount codes for {{ date('Y') }}.
+    Save money with exclusive {{ strtolower($category->name) }} coupons, vouchers, and promo offers updated daily.
+@endif
 @endsection
+
+{{-- 🔑 Meta Keywords --}}
 @section('keywords')
-    {!! $category->meta_keyword !!}
+@if (!empty($category->meta_keywords))
+    {{ strtolower($category->meta_keywords) }}
+@else
+    {{ strtolower($category->name) }}, {{ strtolower($category->name) }} coupons,
+    {{ strtolower($category->name) }} promo codes, {{ strtolower($category->name) }} vouchers,
+    discount offers, {{ strtolower($category->name) }} deals, save money online
+@endif
 @endsection
+
 @push('styles')
 <style>
     /* Category Header Styling */
@@ -19,7 +42,7 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        background-image: url('{{ asset('uploads/categories/' . $category->image) }}');
+        background-image: url('{{ asset('storage/categories/' . $category->image) }}');
         border-radius: 10px;
         overflow: hidden;
     }
@@ -73,7 +96,7 @@
     }
 </style>
 @endpush
-@section('main')
+@section('content')
 
     <div class="container mt-4">
             <nav aria-label="breadcrumb" class="mb-3">
@@ -120,7 +143,7 @@
                         @endphp
                         <a href="{{ $storeurl }}" class="text-decoration-none">
                             <div class="card shadow-sm text-center p-2">
-                                <img src="{{ $store->image ? asset('uploads/stores/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                                <img src="{{ $store->image ? asset('storage/stores/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
                                     loading="lazy"
                                     alt="{{ $store->name }}">
                                 <h5 class="card-title">{{ $store->name ?: "Title not found" }}</h5>

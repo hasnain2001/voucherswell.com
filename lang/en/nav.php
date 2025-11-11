@@ -5,7 +5,7 @@
     'contact' => 'Contact Us',
     'blogs' => 'blogs',
     'stores' =>'stores',
-    'cateories' => 'cateories',
+    'cateories' => 'categories',
     'Coupons' => 'Coupons',
     'deal' => 'deal',
     'Popular-Categories' =>'Popular Categories',

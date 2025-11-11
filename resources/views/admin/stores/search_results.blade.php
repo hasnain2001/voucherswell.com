@@ -1,4 +1,4 @@
-@extends('admin.layouts.datatable')
+@extends('admin.layouts.guest')
 @section('title', 'Store List')
 @section('content')
 <div class="row">
@@ -42,7 +42,7 @@
                     @csrf
                     @method('DELETE')
                     <div class="table-responsive">
-                        <table id="datatable-buttons" class="table table-hover table-centered mb-0 dt-responsive nowrap w-100">
+                        <table id="basic-datatable" class="table table-hover table-centered mb-0 dt-responsive nowrap w-100">
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 30px;">
@@ -67,11 +67,11 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ asset('uploads/stores/' . $store->image) }}"
+                                            <img src="{{ asset('storage/stores/' . $store->image) }}"
                                                  class="rounded me-2"
                                                  alt="{{ $store->name }}"
                                                  width="40"
-                                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/no-image-found.png') }}'"
+                                                 onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-found.png') }}'"
                                                  loading="lazy">
                                             <div>
                                                 <h6 class="mb-0">{{ $store->name }}</h6>
@@ -135,7 +135,7 @@
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
 
-                                            <a href="{{ route('admin.store.show', ['slug' => Str::slug($store->slug)]) }}"
+                                            <a href="{{ route('admin.store.show',$store->id ) }}"
                                                class="btn btn-sm btn-outline-success rounded-3 px-2"
                                                data-bs-toggle="tooltip"
                                                title="Edit Coupons">

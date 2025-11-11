@@ -56,7 +56,7 @@
                         <td>{{ $language->name }}</td>
                         <td>{{ $language->code }}</td>
                         <td>
-                            <img src="{{ Storage::disk('public')->url($language->flag) }}"
+                            <img src="{{ asset('storage/flags/' . $language->flag)}}"
                                  alt="{{ $language->name }}"
                                  width="60"
                                  class="rounded border">

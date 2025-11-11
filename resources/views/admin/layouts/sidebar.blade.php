@@ -113,16 +113,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-table"></i> Tables
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-chart-bar"></i> Charts
-                    </a>
-                </li>
+
                 <li class="menu-title mt-3">Apps</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.language.index') }}">

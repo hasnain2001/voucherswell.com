@@ -7,6 +7,7 @@
 
 @push('styles')
  <link rel="stylesheet" href="{{ asset('assets/css/welcome.css') }}">
+
 @endpush
 @section('content')
 <!-- Hero Slider Section -->
@@ -22,7 +23,7 @@
                 @foreach ($sliders as $key => $slider)
                 <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
                      <a href="{{ $slider->link }}" target="_blank" class="">
-                    <img src="{{ $slider->image ? asset('storage/' . $slider->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                    <img src="{{ $slider->image ? asset('storage/slider/' . $slider->image) : asset('front/assets/images/no-image-found.jpg') }}"
                          class="d-block w-100"
                          alt="{{ $slider->title }}"
                          loading="lazy">
@@ -55,7 +56,6 @@
                 <p>@lang('welcome.p1')</p>
             </div>
         </div>
-
         <div class="position-relative">
             <div class="swiper storesSwiper">
                 <div class="swiper-wrapper pb-4">
@@ -63,17 +63,16 @@
                     @php
                         $storeUrl = $store->slug ? route('store.detail', ['slug' => Str::slug($store->slug)]) : '#';
                     @endphp
-
                     <div class="swiper-slide">
                         <div class="card store-card h-100 border-0  overflow-hidden">
                             <div class="store-image-container p-4">
                                 <a href="{{ $storeUrl }}" class="text-decoration-none text-dark">
                                     <div class="ratio ratio-1x1">
-                                        <img src="{{ $store->image ? asset('storage/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                                        <img src="{{ $store->image ? asset('storage/stores/' . $store->image) : asset('front/assets/img/no-image-found.jpg') }}"
                                              class="img-fluid rounded-circle object-fit-fill shadow"
                                              alt="{{ $store->name }}"
                                              loading="lazy"
-                                             onerror="this.src='{{ asset('assets/images/no-image-found.png') }}'">
+                                             onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                                     </div>
                                 </a>
                             </div>
@@ -117,11 +116,11 @@
                 <!-- Store image -->
                 <div class="store-logo text-center mb-3">
                     <a href="{{ route('store.detail', ['slug' => Str::slug($coupon->store->slug)]) }}">
-                        <img src="{{ $coupon->store->image ? asset('storage/' . $coupon->store->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                        <img src="{{ $coupon->store->image ? asset('storage/stores/' . $coupon->store->image) : asset('front/assets/images/no-image-found.jpg') }}"
                             alt="{{ $coupon->store->name }}"
                             class="img-fluid store-img"
                             loading="lazy"
-                            onerror="this.src='{{ asset('assets/images/no-image-found.png') }}'">
+                            onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                     </a>
                 </div>
 
@@ -146,7 +145,7 @@
                 @if ($coupon->code)
                 <div class="code-wrapper px-3 mb-3">
                     <button class="btn get-code-btn w-100 position-relative"
-                        onclick="handleRevealCode(event, {{ $coupon->id }}, '{{ $coupon->code }}', '{{ $coupon->name }}', '{{ asset('storage/' . $coupon->store->image) }}', '{{ $coupon->store->destination_url }}', '{{ $coupon->store->name }}')">
+                        onclick="handleRevealCode(event, {{ $coupon->id }}, '{{ $coupon->code }}', '{{ $coupon->name }}', '{{ asset('storage/stores/' . $coupon->store->image) }}', '{{ $coupon->store->destination_url }}', '{{ $coupon->store->name }}')">
                         <span class="btn-text">Get Code</span>
 
                         <span class="corner-flag"></span>
@@ -196,7 +195,7 @@
                             <div class="category-image-container p-4">
                                 <a href="{{ $categoryurl }}" class="text-decoration-none text-dark">
                                     <div class="ratio ratio-1x1">
-                                        <img src="{{ $category->image ? asset('uploads/categories/' . $category->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                                        <img src="{{ $category->image ? asset('storage/categories/' . $category->image) : asset('front/assets/images/no-image-found.jpg') }}"
                                              class="img-fluid rounded-circle object-fit-fill"
                                              alt="{{ $category->name }}"
                                              loading="lazy"
@@ -245,11 +244,11 @@
                 <!-- Store image -->
                 <div class="store-logo text-center mb-3">
                     <a href="{{ route('store.detail', ['slug' => Str::slug($coupon->store->slug)]) }}">
-                        <img src="{{ $coupon->store->image ? asset('storage/' . $coupon->store->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                        <img src="{{ $coupon->store->image ? asset('storage/stores/' . $coupon->store->image) : asset('front/assets/images/no-image-found.jpg') }}"
                             alt="{{ $coupon->store->name }}"
                             class="img-fluid store-img"
                             loading="lazy"
-                            onerror="this.src='{{ asset('assets/images/no-image-found.png') }}'">
+                            onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                     </a>
                 </div>
 
@@ -311,7 +310,7 @@
 <section class="blog-section py-2 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 mb-3 d-inline-flex align-items-center">
+            <span class="badge bg-golden bg-opacity-10 text-white rounded-pill px-3 py-2 mb-3 d-inline-flex align-items-center">
                 <i class="fas fa-newspaper me-2"></i>@lang('welcome.sp')
             </span>
             <h2 class="fw-bold mb-3">@lang('welcome.H5')</h2>
@@ -324,14 +323,14 @@
                 <div class="card blog-card h-100 border-0 shadow-sm overflow-hidden transition-all hover-shadow">
                     <div class="card-img-top position-relative overflow-hidden" style="height: 220px;">
                        <a href="{{ route('blog.detail', ['slug' => Str::slug($blog->slug)]) }}">
-                            <img src="{{ $blog->image ? asset('uploads/blogs/' . $blog->image) : asset('front/assets/images/no-image-found.jpg') }}"
+                            <img src="{{ $blog->image ? asset('storage/blogs/' . $blog->image) : asset('front/assets/images/no-image-found.jpg') }}"
                                  alt="{{ $blog->title }}"
                                  class="img-fluid w-100 h-100 object-cover transition-scale"
                                  loading="lazy"
-                                 onerror="this.src='{{ asset('assets/images/no-image-found.png') }}'">
+                                 onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                         </a>
                         <div class="card-img-overlay d-flex align-items-end p-0">
-                            <span class="badge bg-primary bg-opacity-90 position-absolute top-0 end-0 m-3">{{ $blog->category->name ?? 'General' }}</span>
+                            <span class="badge bg-golden bg-opacity-90 position-absolute top-0 end-0 m-3">{{ $blog->category->name ?? 'General' }}</span>
                         </div>
                     </div>
 
@@ -349,11 +348,11 @@
 
 
                         <div class="d-flex align-items-center justify-content-between mt-auto">
-                            <a href="{{ route('blog.detail', ['slug' => Str::slug($blog->slug)]) }}" class="btn btn-link text-primary p-0 text-decoration-none d-flex align-items-center">
+                            <a href="{{ route('blog.detail', ['slug' => Str::slug($blog->slug)]) }}" class="btn btn-link-golden ">
                                @lang('welcome.Read More')<i class="fas fa-arrow-right ms-2"></i>
                             </a>
                             <div class="d-flex">
-                                <!-- Add social sharing icons if needed -->
+
                             </div>
                         </div>
                     </div>
@@ -363,7 +362,7 @@
         </div>
 
         <div class="text-center mt-5">
-            <a href="{{ route('blog', ['lang' => app()->getLocale()]) }}" class="btn btn-primary px-4 py-2 rounded-pill">
+            <a href="{{ route('blog', ['lang' => app()->getLocale()]) }}" class="btn btn-golden px-4 py-2 rounded-pill">
                 <i class="fas fa-book-open me-2"></i>@lang('welcome.View All Articles')
             </a>
         </div>

@@ -1,405 +1,500 @@
-@extends('layouts.welcome')
-@section('title') {{ $store->title }} @endsection
-@section('description') {{ $store->meta_description }} @endsection
-@section('keywords') {{ $store->meta_keyword }} @endsection
-@push('styles')
-<link rel="stylesheet" href="{{ asset('assets/css/store-detail.css') }}">
-@endpush
-@section('main')
- <main class="main">
-        @php
-        $codeCount = 0;
-        $dealCount = 0;
-        foreach ($coupons as $coupon) {
-            if ($coupon->code) {
-                $codeCount++;
-            } else {
-                $dealCount++;
-            }
-        }
-        $totalCount = $codeCount + $dealCount;
-        @endphp
-        <!-- Breadcrumb with Icons (Responsive) -->
-        <nav aria-label="breadcrumb" class="mb-1">
-            <ol class="breadcrumb bg-light p-1 rounded-3 shadow-sm flex-nowrap overflow-auto" style="white-space: nowrap;">
-            <li class="breadcrumb-item flex-shrink-0">
-                <a href="{{ url(app()->getLocale() . '/') }}" class="text-decoration-none text-dark">
-                <i class="fas fa-home me-2"></i>@lang('nav.home')
-                </a>
-            </li>
-            @if($store->category)
-                <li class="breadcrumb-item flex-shrink-0">
-                <a href="{{ route('category.detail', ['slug' => Str::slug($store->category->slug)]) }}" class="text-decoration-none text-dark">
-                    <i class="fas fa-tag me-2"></i>{{ $store->category->name }}
-                </a>
-                </li>
-            @endif
-            <li class="breadcrumb-item flex-shrink-0">
-                <a href="{{ route('stores', ['lang' => app()->getLocale()]) }}" class="text-decoration-none text-dark">
-                <i class="fas fa-store me-2"></i>@lang('nav.stores')
-                </a>
-            </li>
-            <li class="breadcrumb-item active flex-shrink-0" aria-current="page">
-                <i class="fas fa-chevron-right me-2 text-muted"></i>{{ $store->name }}
-            </li>
-            </ol>
-        </nav>
+@extends('layouts.master')
+@section('title')
+    @if ($store->title)
+        {{ $store->title }}
+    @else
+        {{ $store->name }} - Discounts, Coupons
+    @endif
+@endsection
 
-        <!-- Mobile Store Header -->
-        <div class="mobile-store-header d-md-none">
-            <img src="{{ asset('uploads/stores/' . $store->image) }}" alt="{{ $store->name }}" class="mobile-store-logo">
-            <div class="mobile-store-info">
-                <h1 class="mobile-store-name">{{ $store->name }}</h1>
-                <p class="mobile-store-tagline">{{ $store->tagline ?? 'Save more with exclusive deals & coupons!' }}</p>
-                <div class="mobile-store-actions">
-                    <a href="{{ $store->destination_url }}" target="_blank" class="btn btn-light btn-sm rounded-pill">
-                        <i class="fas fa-external-link-alt me-1"></i> @lang('message.Visit Store')
+@section('description')
+    @if ($store->meta_description)
+        {{ $store->meta_description }}
+    @else
+        Save money at {{ $store->name }} with exclusive promo codes, vouchers, and special offers. Get the best deals and discounts verified by Vouchersweell.com.
+    @endif
+@endsection
+
+@section('keywords')
+    @if ($store->meta_keyword)
+        {{ $store->meta_keyword }}, {{ $store->name }} discounts, {{ $store->name }} promo codes
+    @else
+        {{ $store->name }}, {{ $store->name }} coupons, {{ $store->name }} vouchers, discount codes, promo offers, save money, online deals
+    @endif
+@endsection
+@section('content')
+<main class="main container-fluid">
+    @php
+    $codeCount = 0;
+    $dealCount = 0;
+    foreach ($coupons as $coupon) {
+    if ($coupon->code) {
+    $codeCount++;
+    } else {
+    $dealCount++;
+    }
+    }
+    $totalCount = $codeCount + $dealCount;
+    @endphp
+
+    <!-- Breadcrumb Section -->
+    <section class="breadcrumb-section py-3 bg-light">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="breadcrumb">
+                <div class="breadcrumb-container">
+                    <a href="{{ url(app()->getLocale() . '/') }}" class="breadcrumb-item">
+                        <span class="breadcrumb-text">@lang('nav.home')</span>
                     </a>
-                    <div class="d-flex align-items-center bg-white bg-opacity-25 px-2 rounded-pill">
-                        <div class="rating me-1">
-                            @for ($i = 1; $i <= 5; $i++)
-                            <i class="fas fa-star {{ $i <= 4 ? 'text-warning' : 'text-white-50' }} small"></i>
-                            @endfor
-                        </div>
-                        <span class="text-white small">{{ $totalCount }} @lang('message.Offers')</span>
+                    <div class="breadcrumb-item">
+                        @if($store->category && $store->category->title)
+                            <a class="breadcrumb-link" href="{{ route('category.detail', ['slug' => Str::slug($store->category->title)]) }}">
+                                <span class="breadcrumb-text">{{ $store->category->title }}</span>
+                            </a>
+                        @elseif(!empty($store->category))
+                            <a href="{{ route('category.detail', ['slug' => Str::slug($store->category->slug)]) }}" class="breadcrumb-link">
+                                <span class="breadcrumb-text">{{ $store->category->title }}</span>
+                            </a>
+                        @else
+                            <span class="breadcrumb-text">No Category</span>
+                        @endif
                     </div>
+
+                    <span class="breadcrumb-separator">›</span>
+
+                    <a href="{{ route('stores',['lang' => app()->getLocale()]) }}" class="breadcrumb-item">
+                        <span class="breadcrumb-text">@lang('nav.stores')</span>
+                    </a>
+
+                    <span class="breadcrumb-separator">›</span>
+
+                    <span class="breadcrumb-item current">
+                        <span class="breadcrumb-text">{{ $store->name }}</span>
+                    </span>
                 </div>
-            </div>
+            </nav>
         </div>
-
-        <!-- Desktop Store Header -->
-        <div class="desktop-store-header store-header bg-danger bg-gradient p-2 p-md-5 mb-4 mb-lg-2 text-center text-white rounded-4 position-relative overflow-hidden" >
-            <div class="position-absolute top-0 end-0 opacity-10 d-none d-sm-block">
-            <i class="fas fa-certificate fa-7x"></i>
-            </div>
-            <div class="position-absolute bottom-0 start-0 opacity-10 d-none d-sm-block">
-            <i class="fas fa-tags fa-6x"></i>
-            </div>
-            <div class="position-relative h-100 d-flex flex-column justify-content-center align-items-center">
-            <div class="store-logo-container mx-auto mb-3 mb-md-4" style="width: 70px; height: 70px;">
-                <img src="{{ asset('uploads/stores/' . $store->image) }}" alt="{{ $store->name }}" class="store-logo img-fluid rounded-circle shadow border-4 border-white" style="width: 70px; height: 70px; object-fit:contain;">
-            </div>
-            <h1 class="h4 h-md display-5 fw-bold mb-2 mb-md-3">
-                <i class="fas fa-store-alt me-2"></i>{{ $store->name }}
-            </h1>
-            <p class="lead mb-2 mb-md-4 fs-6 fs-md-5">
-                <i class="fas fa-tag me-2"></i>{{ $store->tagline ?? 'Save more with exclusive deals & coupons!' }}
-            </p>
-            <div class="d-flex flex-wrap justify-content-center gap-2 gap-md-3">
-                <a href="{{ $store->destination_url }}" target="_blank" class="btn btn-light btn-sm btn-lg rounded-pill px-3 px-md-4">
-                <i class="fas fa-external-link-alt me-2"></i> @lang('message.Visit Store')
-                </a>
-                <div class="vr d-none d-md-block"></div>
-                <div class="d-flex align-items-center bg-white bg-opacity-25 px-2 px-md-3 rounded-pill">
-                <div class="rating me-2">
-                    @for ($i = 1; $i <= 5; $i++)
-                    <i class="fas fa-star {{ $i <= 4 ? 'text-warning' : 'text-white-50' }}"></i>
-                    @endfor
-                </div>
-                <span class="text-white small small-md">{{ $totalCount }} @lang('message.Offers')</span>
-                </div>
-            </div>
-            </div>
-        </div>
-
-        <div class="page-container">
-            <!-- Coupons Section (Left Side) -->
-            <div class="coupons-section">
-                @if($coupons->isEmpty())
-                    <div class="alert alert-warning text-center py-5 rounded-4 shadow-sm">
-                        <div class="mb-4">
-                            <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
-                        </div>
-                        <h4 class="alert-heading fw-bold">@lang('message.Oops! No Coupons Available')</h4>
-                        <p class="mb-4">@lang('message.Dont worry, you can still explore amazing deals from our partnered brands.')</p>
-                        <a href="{{ route('stores',['lang' => app()->getLocale()]) }}" class="btn btn-danger btn-lg rounded-pill px-4">
-                            <i class="fas fa-store me-2"></i>@lang('message.Explore Brands')
-                        </a>
-                    </div>
-                @else
-            <!-- Filter Buttons (Mobile Dropdown) -->
-            <div class="mb-4">
-                <!-- Mobile Dropdown (hidden on desktop) -->
-                <div class="dropdown d-md-none">
-                    <button class="btn btn-outline-danger dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="d-flex align-items-center">
-                            <i class="fas fa-filter me-2"></i>
-                            @if(request('sort') == 'codes')
-                                <i class="fas fa-ticket-alt me-2"></i>@lang('message.Codes')
-                            @elseif(request('sort') == 'deals')
-                                <i class="fas fa-percentage me-2"></i>@lang('message.Deals')
-                            @else
-                                <i class="fas fa-list me-2"></i>@lang('message.All')
-                            @endif
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu w-100">
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center py-3 {{ !request('sort') ? 'active text-white bg-danger' : '' }}" href="{{ url()->current() }}">
-                                <i class="fas fa-list me-3"></i>
-                                <div class="d-flex justify-content-between w-100">
-                                    <span>@lang('message.All')</span>
-                                    <span class="badge bg-secondary ms-2">{{ $totalCount }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center py-3 {{ request('sort') == 'codes' ? 'active text-white bg-danger' : '' }}" href="{{ url()->current() }}?sort=codes">
-                                <i class="fas fa-ticket-alt me-3"></i>
-                                <div class="d-flex justify-content-between w-100">
-                                    <span>@lang('message.Codes')</span>
-                                    <span class="badge bg-secondary ms-2">{{ $codeCount }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center py-3 {{ request('sort') == 'deals' ? 'active text-white bg-danger' : '' }}" href="{{ url()->current() }}?sort=deals">
-                                <i class="fas fa-percentage me-3"></i>
-                                <div class="d-flex justify-content-between w-100">
-                                    <span>@lang('message.Deals')</span>
-                                    <span class="badge bg-secondary ms-2">{{ $dealCount }}</span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
+    </section>
+    <!-- Store Header Section - Mobile Optimized -->
+    <section class="store-header-section py-4 bg-white card shadow">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Image on left for all screens -->
+                <div class="col-md-2 col-3">
+                    <img src="{{ asset('storage/stores/' . $store->image) }}"
+                         class="store-logo rounded-3 shadow-sm w-100"
+                         alt="{{ $store->name }}"
+                         style="max-width: 80px;">
                 </div>
 
-                <!-- Desktop Buttons (hidden on mobile) -->
-                <div class="d-none d-md-flex flex-nowrap overflow-x-auto pb-2" style="-webkit-overflow-scrolling: touch;">
-                    <div class="d-flex flex-nowrap gap-2">
-                        <a href="{{ url()->current() }}" class="btn btn-outline-danger rounded-pill flex-shrink-0 {{ !request('sort') ? 'active bg-danger text-white' : '' }}">
-                            <i class="fas fa-list me-2"></i>@lang('message.All') ({{ $totalCount }})
-                        </a>
-                        <a href="{{ url()->current() }}?sort=codes" class="btn btn-outline-danger rounded-pill flex-shrink-0 {{ request('sort') == 'codes' ? 'active bg-danger text-white' : '' }}">
-                            <i class="fas fa-ticket-alt me-2"></i>@lang('message.Codes') ({{ $codeCount }})
-                        </a>
-                        <a href="{{ url()->current() }}?sort=deals" class="btn btn-outline-danger rounded-pill flex-shrink-0 {{ request('sort') == 'deals' ? 'active bg-danger text-white' : '' }}">
-                            <i class="fas fa-percentage me-2"></i>@lang('message.Deals') ({{ $dealCount }})
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-
-                <!-- Coupons Grid - 2 columns on mobile, 3 on desktop -->
-                <div class="coupons-grid">
-                    @foreach ($coupons as $coupon)
-                        <div class="coupon-card">
-                            <div class="coupon-card-header">
-                                <img src="{{ asset('uploads/stores/' . $store->image) }}" alt="{{ $store->name }}" class="img-fluid" style="max-height: 50px; width: auto;">
+                <!-- Store info on right for mobile, full width for desktop -->
+                <div class="col-md-10 col-9">
+                    <div class="store-info text-md-start text-end">
+                        <h1 class="store-title mb-1">{{ $store->name }}</h1>
+                        <div class="store-rating d-flex align-items-center justify-content-md-start justify-content-end mb-1">
+                            <div class="stars text-warning me-2">
+                                ⭐⭐⭐⭐⭐
                             </div>
+                            <span class="text-muted small">(4.8/5)</span>
+                        </div>
+                        <p class="store-tagline text-muted mb-2 mb-md-0 small d-none d-md-block">
+                           {{ $store->description }}
+                        </p>
+                    </div>
+                       <!-- Visit Store Button - Full width on mobile, aligned right on desktop -->
+                <div class="">
+                    <a href="{{ $store->destination_url }}" target="_blank" class="btn btn-golden btn-sm px-4 rounded-pill">
+                        <i class="fas fa-external-link-alt me-2"></i>@lang('message.Visit Store')
+                    </a>
+                </div>
+                </div>
 
-                            <div class="coupon-card-body">
-                                <!-- Coupon Title -->
-                                <h5 class="fw-bold mb-3">
-                                    <i class="fas {{ $coupon->code ? 'fa-ticket-alt text-dark' : 'fa-percentage text-success' }} me-2"></i>
-                                    {{ $coupon->name }}
-                                </h5>
 
-                                <!-- Coupon Description -->
-                                @if($coupon->description)
-                                    <div class="mb-3">
-                                        <p class="small text-muted mb-1">
-                                            <i class="fas fa-info-circle me-1"></i> @lang('message.Details')
-                                        </p>
-                                        <p class="small">{{ $coupon->description }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <section class="store-content-section py-5">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Coupons Grid -->
+                <div class="col-lg-9 col-12 order-1 order-lg-1">
+                    <!-- Stats Bar -->
+                    <div class="stats-bar mb-4 p-3 bg-light rounded-3 d-none d-lg-block">
+                        <div class="row text-center g-3">
+                            <div class="col-md-4 col-4">
+                                <div class="stat-item">
+                                    <h6 class="stat-number text-golden mb-1">{{ $totalCount }}</h6>
+                                    <p class="stat-label text-muted mb-0">Total Offers</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-4">
+                                <div class="stat-item">
+                                    <h6 class="stat-number text-success mb-1">{{ $codeCount }}</h6>
+                                    <p class="stat-label text-muted mb-0">Coupon Codes</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-4">
+                                <div class="stat-item">
+                                    <h6 class="stat-number text-info mb-1">{{ $dealCount }}</h6>
+                                    <p class="stat-label text-muted mb-0">Deals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Tabs - Mobile Optimized -->
+                    <div class="filter-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <h4 class="filter-title h5 mb-0 d-none d-md-block">Filter Offers</h4>
+
+                            <!-- Mobile Filter Dropdown -->
+                            <div class="dropdown d-md-none">
+                                <button class="btn btn-outline-golden dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-filter me-2"></i>Filter
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item {{ !request()->has('sort') ? 'active' : '' }}" href="{{ url()->current() }}">
+                                            All <span class="badge bg-golden ms-2">{{ $totalCount }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request('sort') == 'codes' ? 'active' : '' }}" href="{{ url()->current() }}?sort=codes">
+                                            Codes <span class="badge bg-success ms-2">{{ $codeCount }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request('sort') == 'deals' ? 'active' : '' }}" href="{{ url()->current() }}?sort=deals">
+                                            Deals <span class="badge bg-info ms-2">{{ $dealCount }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coupons Grid -->
+                    @if($coupons->isEmpty())
+                    <div class="empty-state text-center py-5">
+                        <div class="empty-icon mb-4">
+                            <i class="fas fa-tag fa-4x text-muted"></i>
+                        </div>
+                        <h3 class="empty-title mb-3">@lang('message.Oops! No Coupons Available')</h3>
+                        <p class="empty-text text-muted mb-4">@lang('message.Dont worry, you can still explore amazing deals from our partnered brands.')</p>
+                        <a href="{{ route('stores') }}" class="btn btn-golden btn-lg px-4 rounded-pill">
+                            @lang('message.Explore Brands')<i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                    @else
+                    <div class="row g-3">
+                        @foreach ($coupons as $coupon)
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+                            <div class="coupon-card card h-100 border-0 shadow-sm hover-lift position-relative" style="border-radius: 16px; overflow: hidden;">
+                                <!-- Premium Badge -->
+                                @if (!empty($coupon->authentication) && $coupon->authentication !== 'No Auth' && $coupon->authentication !== 'On Sale')
+                                <div class="premium-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.7rem; border-radius: 20px;">
+                                        <i class="fas fa-crown me-1"></i>{{ $coupon->authentication }}
+                                    </span>
+                                </div>
+                                @endif
+
+                                <!-- Hot Offer Ribbon -->
+                                @if($coupon->clicks > 50)
+                                <div class="hot-offer-ribbon position-absolute top-0 end-0">
+                                    <div class="ribbon bg-danger text-white px-3 py-1" style="transform: rotate(45deg) translate(25px, -10px); font-size: 0.7rem;">
+                                        <i class="fas fa-fire me-1"></i>HOT
                                     </div>
+                                </div>
                                 @endif
 
-                                <!-- Expiry & Usage -->
-                                <div class="d-flex justify-content-between small mt-auto">
-                                    <span class="{{ strtotime($coupon->ending_date) < strtotime(now()) ? 'text-danger' : 'text-muted' }}">
-                                        <i class="far fa-clock me-1"></i>
-                                        {{ \Carbon\Carbon::parse($coupon->ending_date)->format('M d, Y') }}
-                                    </span>
-                                    <span class="text-muted" id="usedCount{{ $coupon->id }}">
-                                        <i class="fas fa-users me-1"></i> {{ $coupon->clicks ?? 0 }}
-                                    </span>
+                                <div class="card-body p-3 d-flex flex-column">
+                                    <!-- Coupon Header -->
+                                    <div class="coupon-header mb-2">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <span class="coupon-type badge {{ $coupon->code ? 'bg-success' : 'bg-golden' }} px-3 py-2" style="border-radius: 20px; font-size: 0.75rem;">
+                                                <i class="fas {{ $coupon->code ? 'fa-tag' : 'fa-percent' }} me-1"></i>
+                                                {{ $coupon->code ? 'Code' : 'Deal' }}
+                                            </span>
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <div class="store-image-container position-relative d-inline-block">
+                                                <img src="{{ asset('storage/stores/' . $store->image) }}"
+                                                     class="coupon-store-image rounded-circle shadow border-3 border-white"
+                                                     alt="{{ $store->name }}"
+                                                     width="60"
+                                                     height="60"
+                                                     style="object-fit: cover;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Coupon Content -->
+                                    <div class="coupon-content flex-grow-1">
+                                        <h6 class="coupon-title mb-2 fw-bold" style="font-size: 0.9rem; line-height: 1.3;">
+                                            {{ Str::limit($coupon->name, 60) }}
+                                        </h6>
+
+                                        @if($coupon->description)
+                                        <p class="coupon-description text-muted small mb-3 d-none d-sm-block" style="font-size: 0.8rem; line-height: 1.4;">
+                                            {{ Str::limit($coupon->description, 80) }}
+                                        </p>
+                                        @endif
+
+                                        <div class="coupon-meta d-flex justify-content-between align-items-center mb-3">
+                                            <span class="ending-date small {{ \Carbon\Carbon::parse($coupon->ending_date)->isPast() ? 'text-danger' : 'text-muted' }}" style="font-size: 0.75rem;">
+                                                <i class="fas fa-clock me-1"></i>
+                                                <span class="d-none d-sm-inline">Ends:</span>
+                                                {{ \Carbon\Carbon::parse($coupon->ending_date)->format('M d') }}
+                                            </span>
+                                            <span class="used-count small text-muted" style="font-size: 0.75rem;">
+                                                <i class="fas fa-users me-1"></i>
+                                                <span id="usedCount{{ $coupon->id }}">{{ $coupon->clicks }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Coupon Action -->
+                                    <div class="coupon-action mt-auto">
+                                        @if ($coupon->code)
+                                        <button class="w-100 get-code-btn py-2 border-0 rounded-pill fw-bold position-relative overflow-hidden"
+
+                                                onclick="handleRevealCode(event, {{ $coupon->id }}, '{{ $coupon->code }}', '{{ $coupon->name }}', '{{ asset('storage/stores/' . $store->image) }}', '{{ $store->destination_url }}', '{{ $coupon->store }}')">
+                                            <span class="reveal-text position-relative z-2">
+                                                <i class="fas fa-gift me-2"></i>Get Code
+                                            </span>
+                                            <span class="coupon-code d-none">{{ $coupon->code }}</span>
+                                            <div class="btn-shine position-absolute top-0 left-0 w-100 h-100" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-20deg);"></div>
+                                        </button>
+                                        @else
+                                        <a href="{{ $store->destination_url }}"
+                                           target="_blank"
+                                           class="deal-btn w-100 py-2 border-0 rounded-pill fw-bold text-decoration-none text-center d-block position-relative overflow-hidden"
+                                           onclick="updateClickCount('{{ $coupon->id }}')">
+                                            <span class="position-relative z-2">
+                                                <i class="fas fa-bolt me-2"></i>View Deal
+                                            </span>
+                                            <div class="btn-shine position-absolute top-0 left-0 w-100 h-100" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg);"></div>
+                                        </a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
 
-                            <div class="coupon-card-footer">
-                                @if ($coupon->code)
-                                    <button class="get-code-btn w-100"
-                                        onclick="handleRevealCode(event, {{ $coupon->id }}, '{{ $coupon->code }}', '{{ $coupon->name }}', '{{ asset('uploads/stores/' . $coupon->store->image) }}', '{{ $coupon->store->destination_url }}', '{{ $coupon->store->name }}')">
-                                        <i class="fas fa-ticket-alt me-2"></i> @lang('welcome.Get Code')
-                                    </button>
+                    <!-- Store Content / Blog Section -->
+                    @if ($store->content || $relatedblogs->isNotEmpty())
+                    <div class="content-section mt-5">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-3 p-md-4">
+                                @if ($store->content)
+                                <div class="store-content">
+                                    {!! $store->content !!}
+                                </div>
                                 @else
-                                    <a href="{{ $coupon->store->destination_url }}" target="_blank"
-                                       class="deal-btn w-100 d-block"
-                                       onclick="updateClickCount({{ $coupon->id }})">
-                                        <i class="fas fa-shopping-bag me-2"></i>@lang('welcome.View Deal')
-                                    </a>
+                                <div class="related-blogs">
+                                    <h3 class="section-title mb-3 mb-md-4">Related Articles</h3>
+                                    @foreach ($relatedblogs as $blog)
+                                    <div class="blog-item mb-3 mb-md-4 pb-3 pb-md-4 border-bottom">
+                                        <h4 class="blog-title h5 h6-md mb-2 mb-md-3">{{ $blog->title }}</h4>
+                                        @if($blog->image)
+                                        <img class="blog-image img-fluid rounded mb-2 mb-md-3"
+                                             src="{{ asset('storage/blogs/' . $blog->image) }}"
+                                            alt="{{ $blog->title }}"
+                                             style="max-height: 150px; object-fit: cover;">
+                                        @endif
+                                        <div class="blog-content small">
+                                            {!! Str::limit(strip_tags($blog->content), 150) !!}
+                                        </div>
+                                        <a href="{{ route('blog.detail', ['slug' => Str::slug($blog->slug)]) }}" class="btn btn-link text-golden p-0 mt-2 small">
+                                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
                                 @endif
                             </div>
                         </div>
-                    @endforeach
+                    </div>
+                    @endif
                 </div>
-                @endif
 
-                <!-- Store Content Section -->
-                @if ($store->content)
-                    <div class="mt-5 bg-white p-3 p-md-4 rounded-4 shadow-sm w-100">
-                        <div class="d-flex align-items-center mb-3 mb-md-4 flex-column flex-md-row text-center text-md-start">
-                            <i class="fas fa-info-circle fa-2x text-dark me-0 me-md-3 mb-2 mb-md-0"></i>
-                            <h3 class="mb-0 fs-5 fs-md-3">@lang('nav.about') {{ $store->name }}</h3>
+                <!-- Enhanced Sidebar -->
+                <div class="col-lg-3 col-12 order-2 order-lg-2">
+                    <div class="sidebar-sticky">
+                        <!-- Store Quick Actions Card -->
+                        <div class="sidebar-card card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-golden text-dark text-center py-3 rounded-top">
+                                <h5 class="mb-0 fw-bold"><i class="fas fa-store me-2"></i>Store Quick View</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <!-- Store Image & Basic Info -->
+                                <div class="store-sidebar-header text-center p-4 bg-gradient-light">
+                                    <img src="{{ asset('storage/stores/' . $store->image) }}"
+                                         class="store-sidebar-image rounded-circle shadow mb-3 border border-4 border-white"
+                                         alt="{{ $store->name }}"
+                                         width="90"
+                                         height="90">
+                                    <h4 class="store-name h5 mb-2 fw-bold text-dark">{{ $store->name }}</h4>
+                                    <div class="store-rating text-warning mb-3">
+                                        ⭐⭐⭐⭐⭐ <span class="text-muted small">(4.8)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Actions -->
+                                <div class="quick-actions p-3 border-bottom">
+                                    <a href="{{ $store->destination_url }}" target="_blank" class="btn btn-golden w-100 mb-2 fw-semibold">
+                                        <i class="fas fa-external-link-alt me-2"></i>Visit Store
+                                    </a>
+                                    <button class="btn btn-outline-golden w-100 fw-semibold" onclick="scrollToCoupons()">
+                                        <i class="fas fa-tags me-2"></i>View All Coupons
+                                    </button>
+                                </div>
+
+                                <!-- Store Stats -->
+                                <div class="store-stats p-3">
+                                    <h6 class="stats-title fw-bold text-center mb-3 text-uppercase small">Store Statistics</h6>
+                                    <div class="stats-grid">
+                                        <div class="stat-circle text-center mb-3">
+                                            <div class="stat-number bg-golden text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2"
+                                                 style="width: 60px; height: 60px;">
+                                                <strong>{{ $totalCount }}</strong>
+                                            </div>
+                                            <span class="stat-label small text-muted">Total Offers</span>
+                                        </div>
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-success fw-bold">{{ $codeCount }}</div>
+                                                    <div class="mini-stat-label small text-muted">Codes</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-info fw-bold">{{ $dealCount }}</div>
+                                                    <div class="mini-stat-label small text-muted">Deals</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="content-text" style="font-size: 1rem;">
-                            {!! $store->content !!}
+
+                        <!-- Filter Options Card -->
+                        <div class="sidebar-card card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light py-3">
+                                <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-filter me-2"></i>Filter Offers</h5>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="filter-options">
+                                    <div class="filter-group mb-3">
+                                        <h6 class="filter-subtitle fw-semibold mb-2">Offer Type</h6>
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url()->current() }}" class="btn btn-outline-golden text-start {{ !request()->has('sort') ? 'active' : '' }}">
+                                                <i class="fas fa-layer-group me-2"></i>
+                                                All Offers
+                                                <span class="badge bg-golden float-end">{{ $totalCount }}</span>
+                                            </a>
+                                            <a href="{{ url()->current() }}?sort=codes" class="btn btn-outline-success text-start {{ request('sort') == 'codes' ? 'active' : '' }}">
+                                                <i class="fas fa-tag me-2"></i>
+                                                Coupon Codes
+                                                <span class="badge bg-success float-end">{{ $codeCount }}</span>
+                                            </a>
+                                            <a href="{{ url()->current() }}?sort=deals" class="btn btn-outline-info text-start {{ request('sort') == 'deals' ? 'active' : '' }}">
+                                                <i class="fas fa-percent me-2"></i>
+                                                Deals & Sales
+                                                <span class="badge bg-info float-end">{{ $dealCount }}</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter-group">
+                                        <h6 class="filter-subtitle fw-semibold mb-2">Sort By</h6>
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url()->current() }}?sort=latest" class="btn btn-outline-secondary text-start">
+                                                <i class="fas fa-clock me-2"></i>Latest
+                                            </a>
+                                            <a href="{{ url()->current() }}?sort=popular" class="btn btn-outline-secondary text-start">
+                                                <i class="fas fa-fire me-2"></i>Most Popular
+                                            </a>
+                                            <a href="{{ url()->current() }}?sort=expiring" class="btn btn-outline-secondary text-start">
+                                                <i class="fas fa-hourglass-end me-2"></i>Expiring Soon
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            </div>
 
-            <!-- Sidebar Section (Right Side) -->
-            <div class="sidebar-section">
-                <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                    <!-- Store Summary -->
-                    <div class="card-header bg-danger text-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-chart-pie me-2"></i> @lang('message.Store Summary')
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                <span class="text-muted">
-                                    <i class="fas fa-ticket-alt text-dark me-2"></i> Coupon @lang('message.Codes')
-                                </span>
-                                <span class="badge bg-danger rounded-pill">{{ $codeCount }}</span>
-                            </li>
-                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                <span class="text-muted">
-                                    <i class="fas fa-percentage text-success me-2"></i> @lang('message.Deals')
-                                </span>
-                                <span class="badge bg-success rounded-pill">{{ $dealCount }}</span>
-                            </li>
-                            <li class="d-flex justify-content-between align-items-center py-2">
-                                <span class="text-muted">
-                                    <i class="fas fa-tags text-info me-2"></i> @lang('message.Total Offers')
-                                </span>
-                                <span class="badge bg-info rounded-pill">{{ $totalCount }}</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div class="card-header bg-light py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-link me-2"></i> @lang('nav.Quick Links')
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{ $store->destination_url }}" target="_blank" class="btn btn-outline-danger text-start btn-sm">
-                                <i class="fas fa-external-link-alt me-2"></i> @lang('message.Visit Store')
-                            </a>
-                            <a href="{{ route('stores', ['lang' => app()->getLocale()]) }}" class="btn btn-outline-secondary text-start btn-sm">
-                                <i class="fas fa-store me-2"></i>  @lang('nav.stores')
-                            </a>
-                            @if($store->category)
-                                <a href="{{ route('category.detail', ['slug' => Str::slug($store->category->slug)]) }}" class="btn btn-outline-secondary text-start btn-sm"><i class="fas fa-tag me-2"></i><small class="text-nowrap">@lang('nav.cateories'): {{ $store->category->name }}</small></a>
-                            @endif
+                        <!-- Store About Card -->
+                        @if($store->about)
+                        <div class="sidebar-card card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light py-3">
+                                <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-info-circle me-2"></i>About {{ $store->name }}</h5>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="about-content">
+                                    <p class="about-text text-muted small mb-0">
+                                        {{ Str::limit($store->about, 200) }}
+                                    </p>
+                                    @if(strlen($store->about) > 200)
+                                    <button class="btn btn-link text-golden p-0 mt-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#fullAbout">
+                                        Read More <i class="fas fa-chevron-down ms-1"></i>
+                                    </button>
+                                    <div class="collapse mt-2" id="fullAbout">
+                                        <p class="text-muted small">{{ $store->about }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Store Details -->
-                    <div class="card-header bg-light py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i> @lang('message.Store Details')
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="small text-muted mb-3">
-                            <i class="fas fa-align-left me-2"></i> {{ $store->description }}
-                        </p>
-                        @if($store->user)
-                            <p class="small text-muted mb-0">
-                                <i class="fas fa-user-plus me-2"></i> @lang('message.Added by'):{{ $store->user->name }}
-                            </p>
                         @endif
-                    </div>
 
-                    <!-- About Store -->
-                    <div class="card-header bg-light py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>@lang('message.About Store')
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="small text-muted mb-3">
-                            <i class="fas fa-align-left me-2"></i> {{ $store->about }}
-                        </p>
-                    </div>
-
-                    <!-- Related Stores -->
-                    <div class="card-header bg-light py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-store-alt me-2"></i> @lang('message.Related Stores')
-                        </h5>
-                    </div>
-                    <div class="card-body">
+                        <!-- Related Stores Card -->
                         @if($relatedStores->isNotEmpty())
-                            <ul class="list-unstyled mb-0">
-                                @foreach ($relatedStores as $related)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <div class="me-3">
-                                            <img src="{{ asset('uploads/stores/' . $related->image) }}" alt="{{ $related->name }}" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
+                        <div class="sidebar-card card border-0 shadow-sm">
+                            <div class="card-header bg-light py-3">
+                                <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-store me-2"></i>Similar Stores</h5>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="related-stores-list">
+                                    @foreach ($relatedStores as $relatedStore)
+                                    <a href="{{ route('store.detail', ['slug' => Str::slug($relatedStore->slug)]) }}"
+                                       class="related-store-item d-flex align-items-center text-decoration-none text-dark mb-3 p-3 rounded hover-lift bg-light">
+                                        <img src="{{ asset('storage/stores/' . $relatedStore->image) }}"
+                                             class="related-store-image rounded-circle shadow-sm me-3 border"
+                                             alt="{{ $relatedStore->name }}"
+                                             width="45"
+                                             height="45">
+                                        <div class="related-store-info flex-grow-1">
+                                            <h6 class="related-store-name fw-semibold mb-1 small">{{ Str::limit($relatedStore->name, 25) }}</h6>
+                                            <div class="related-store-meta d-flex align-items-center">
+                                                <span class="text-warning small me-2">
+                                                    <i class="fas fa-star"></i> 4.5
+                                                </span>
+                                                <span class="text-muted small">
+                                                    <i class="fas fa-tag ms-2"></i> {{ $relatedStore->coupons_count ?? 0 }} offers
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <a href="{{ route('store.detail', ['slug' => Str::slug($related->slug)]) }}" class="fw-semibold text-dark text-decoration-none">
-                                                {{ $related->name }}
-                                            </a>
-                                            @if($related->tagline)
-                                                <div class="small text-muted">{{ $related->tagline }}</div>
-                                            @endif
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p class="small text-muted mb-0">
-                                <i class="fas fa-info-circle me-2"></i> No related stores found.
-                            </p>
-                        @endif
-                    </div>
-
-                    <!-- Store Blogs -->
-                    <div class="card-header bg-light py-3">
-                        <h5 class="mb-0">
-                            <i class="fas fa-store-alt me-2"></i> @lang('message.Store Blogs')
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        @if($relatedblogs->isNotEmpty())
-                            <ul class="list-unstyled mb-0">
-                                @foreach ($relatedblogs as $related)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <div class="me-3">
-                                            <img src="{{ asset('uploads/blogs/' . $related->image) }}" alt="{{ $related->name }}" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
-                                        </div>
-                                        <div>
-                                            <a href="{{ route('blog.detail', ['slug' => Str::slug($related->slug)]) }}" class="fw-semibold text-dark text-decoration-none">
-                                                {{ $related->name }}
-                                            </a>
-                                            @if($related->tagline)
-                                                <div class="small text-muted">{{ $related->tagline }}</div>
-                                            @endif
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p class="small text-muted mb-0">
-                                <i class="fas fa-info-circle me-2"></i> @lang('message.No related stores found.')
-                            </p>
+                                        <i class="fas fa-chevron-right text-muted"></i>
+                                    </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
- </main>
+    </section>
+</main>
 
 <!-- Enhanced Coupon Code Modal -->
 <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
@@ -487,6 +582,12 @@
 
             // Start countdown timer
             startCountdown();
+
+            // Add shine animation to buttons
+            const shineElements = document.querySelectorAll('.btn-shine');
+            shineElements.forEach(shine => {
+                shine.style.animation = 'shine 2s infinite';
+            });
         });
 
         function handleRevealCode(event, couponId, couponCode, couponName, storeImage, destinationUrl, storeName) {
@@ -567,5 +668,14 @@
                 timeLeft--;
             }, 1000);
         }
+
+        function scrollToCoupons() {
+            document.querySelector('.filter-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
     </script>
+@endpush
+@push('styles')
+<link rel="stylesheet" href="{{ asset('assets/css/store-detail.css') }}">
 @endpush

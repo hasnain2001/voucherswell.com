@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Employeee Dashboard - @yield('title')</title>
-
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
     <!-- ✅ Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -116,14 +117,16 @@
     <!-- ✅ DataTables Initialization (Optional global setup) -->
     <script>
           $(document).ready(function () {
-            const table = $('#basic-datatable').DataTable({
-                responsive: true,
-                ordering: false,
-                paging: false, // disable paging for full drag functionality
-                lengthChange: false,
-                searching: true,
-                info: false
-            });
+           const table = $('#basic-datatable').DataTable({
+            responsive: true,
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            pageLength: 10
+        });
 
             // Make table body sortable
             $('#tablecontents').sortable({

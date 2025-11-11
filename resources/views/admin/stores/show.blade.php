@@ -118,11 +118,11 @@
                     <div class="card-body">
                         <div class="text-center mb-4">
                             <img class="img-thumbnail rounded-circle border-4 border-primary shadow-sm"
-                                 src="{{ asset('storage/' . $store->image) }}"
+                                 src="{{ $store->image ? asset('storage/stores/' . $store->image) : asset('front/assets/images/no-image-found.jpg') }}"
                                  style="width: 120px; height: 120px; object-fit: contain;"
                                  loading="lazy"
                                  alt="{{ $store->name }}"
-                                 onerror="this.src='{{ asset('admin/img/default-store.png') }}'">
+                                 onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                             <h4 class="mt-3 mb-1">{{ $store->name }}</h4>
                             <p class="text-muted">{{ $store->slug }}</p>
                         </div>
@@ -158,7 +158,7 @@
                                     <span class="text-muted">
                                         <i class="fas fa-user me-2 text-primary"></i>Created By
                                     </span>
-                                    <span class="fw-semibold">{{ $store->user->name }}</span>
+                                    <span class="fw-semibold">{{ $store->user->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
                             <div class="detail-item mb-2">
@@ -314,7 +314,7 @@
                                             <div class="audit-info">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <div>
-                                                        <div class="fw-semibold small">{{ $coupon->user->name }}</div>
+                                                        <div class="fw-semibold small">{{ $coupon->user->name ?? 'N/A' }}</div>
                                                         <small class="text-muted">{{ $coupon->created_at->format('M d, Y') }}</small>
                                                     </div>
                                                 </div>

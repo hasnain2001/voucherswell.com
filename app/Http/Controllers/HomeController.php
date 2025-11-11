@@ -61,7 +61,7 @@ class HomeController extends Controller
             ->get();
         $blogs = Blog::orderBy('created_at', 'desc')
          ->where('language_id', $language->id)
-            ->take(5)
+            ->take(6)
             ->get();
 
         return view('welcome', compact('stores', 'sliders', 'categories', 'couponscode', 'couponsdeal', 'blogs'));
@@ -76,10 +76,11 @@ class HomeController extends Controller
             abort(404, 'Language not found');
         }
         // Filter stores by language_id
-        $stores = Store::where('language_id', $language->id)
+        $stores = Store::withCount('coupons')
+                        ->where('language_id', $language->id)
                         ->distinct()
                         ->orderBy('created_at','desc')
-                        ->paginate(10);
+                        ->paginate(40);
 
         return view('front-end.stores', compact('stores'));
     }
@@ -172,7 +173,7 @@ class HomeController extends Controller
         });
 
         // Filter categories by language_id
-        $categories = Category::where('language_id', $language->id)->paginate(10);
+        $categories = Category::where('language_id', $language->id)->get();
 
         return view('front-end.category', compact('categories'));
     }
@@ -202,7 +203,8 @@ class HomeController extends Controller
                 ->take(5)
                 ->get();
         $stores = Store::where('category_id', $category->id)
-        ->where('language_id', $category->language_id)->get();
+        // ->where('language_id', $category->language_id)
+        ->get();
 
         return view('front-end.category_detail', compact('category','relatedblogs','stores'));
     }

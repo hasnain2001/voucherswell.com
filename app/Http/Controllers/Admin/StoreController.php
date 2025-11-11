@@ -62,69 +62,66 @@ class StoreController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:stores,slug',
+            'status' => 'required|boolean',
+            'url' => 'required|url',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'title' => 'nullable|string|max:255',
+            'meta_keyword' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'about' => 'nullable|string',
+            'description' => 'required|string',
+            'language_id' => 'required|exists:languages,id',
+            'category_id' => 'required|exists:categories,id',
+            'network_id' => 'nullable|exists:networks,id',
+            'top_store' => 'nullable|boolean',
+            'destination_url' => 'nullable|url',
+        ]);
+
+        // Step 1: Create store record first (without image)
+        $store = new Store();
+        $store->user_id = Auth::id();
+        $store->language_id = $request->language_id;
+        $store->category_id = $request->category_id;
+        $store->network_id = $request->network_id;
+        $store->top_store = $request->top_store;
+        $store->destination_url = $request->destination_url;
+        $store->name = $request->name;
+        $store->slug = $request->slug;
+        $store->status = $request->status;
+        $store->title = $request->title;
+        $store->meta_keyword = $request->meta_keyword;
+        $store->meta_description = $request->meta_description;
+        $store->content = $request->content;
+        $store->about = $request->about;
+        $store->description = $request->description;
+        $store->url = $request->url;
+        $store->save(); // ✅ We now have $store->id
+
+        // Step 2: Handle image upload (after ID is known)
+       if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $storeNameSlug = Str::slug($request->slug);
+                $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
+
+                // Store in storage/app/public/stores/
+                $path = $image->storeAs('stores', $imageName, 'public');
 
 
-public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'slug' => 'required|string|max:255|unique:stores,slug',
-        'status' => 'required|boolean',
-        'url' => 'required|url',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'title' => 'nullable|string|max:255',
-        'meta_keyword' => 'nullable|string|max:255',
-        'meta_description' => 'nullable|string|max:255',
-        'content' => 'nullable|string',
-        'about' => 'nullable|string',
-        'description' => 'required|string',
-        'language_id' => 'required|exists:languages,id',
-        'category_id' => 'required|exists:categories,id',
-        'network_id' => 'nullable|exists:networks,id',
-        'top_store' => 'nullable|boolean',
-        'destination_url' => 'nullable|url',
-    ]);
+                $store->image = basename($path);
+                $store->save();
+            }
 
-    // Step 1: Create store record first (without image)
-    $store = new Store();
-    $store->user_id = Auth::id();
-    $store->language_id = $request->language_id;
-    $store->category_id = $request->category_id;
-    $store->network_id = $request->network_id;
-    $store->top_store = $request->top_store;
-    $store->destination_url = $request->destination_url;
-    $store->name = $request->name;
-    $store->slug = $request->slug;
-    $store->status = $request->status;
-    $store->title = $request->title;
-    $store->meta_keyword = $request->meta_keyword;
-    $store->meta_description = $request->meta_description;
-    $store->content = $request->content;
-    $store->about = $request->about;
-    $store->description = $request->description;
-    $store->url = $request->url;
-    $store->save(); // ✅ We now have $store->id
 
-    // Step 2: Handle image upload (after ID is known)
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $storeNameSlug = Str::slug($request->slug);
-        $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
-
-        // Store image in storage/app/public/stores/{id}/
-        $path = $image->storeAs("stores", $imageName, 'public');
-
-        // Update store image path
-        $store->image = $path;
-        $store->save();
+        return redirect()
+            ->route('admin.store.show', $store->id)
+            ->with('success', 'Store created successfully.');
     }
-
-    return redirect()
-        ->route('admin.store.show', $store->id)
-        ->with('success', 'Store created successfully.');
-}
-
-
     /**
      * Display the specified resource.
      */
@@ -140,7 +137,7 @@ public function store(Request $request)
                 ->where('store_id', $store->id)
                 ->orderByRaw('CAST(`order` AS SIGNED) ASC')
                 ->get();
-            $stores = Store::orderBy('created_at', 'desc')->get();
+            $stores = Store::with('user', 'language', 'category', 'network')->orderBy('created_at', 'desc')->get();
             $languages = language::orderBy('created_at', 'desc')->get();
 
             return view('admin.stores.show', compact('store', 'coupons', 'stores', 'languages'));
@@ -190,19 +187,19 @@ public function store(Request $request)
         $imagePath = $store->image; // Keep old image by default
 
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($store->image && Storage::disk('public')->exists($store->image)) {
-                Storage::disk('public')->delete($store->image);
-            }
+    if ($store->image && Storage::disk('public')->exists('stores/' . $store->image)) {
+        Storage::disk('public')->delete('stores/' . $store->image);
+    }
 
-            // Save new image in storage/app/public/stores/{id}/
-               $image = $request->file('image');
-        $storeNameSlug = Str::slug($request->slug);
-        $imageName = $storeNameSlug . '.' . $image->getClientOriginalExtension();
+    $image = $request->file('image');
+    $imageName = Str::slug($request->slug) . '.' . $image->getClientOriginalExtension();
+    $image->storeAs('stores', $imageName, 'public');
+     $path = $image->storeAs('stores', $imageName, 'public');
+    $store->image = basename($path);
+}
 
-        // Store image in storage/app/public/stores/{id}/
-        $imagePath = $image->storeAs("stores", $imageName, 'public');
-        }
+
+
 
         // 🧾 Update store data
         $store->update([

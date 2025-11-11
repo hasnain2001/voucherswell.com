@@ -20,10 +20,7 @@ class SearchController extends Controller
         $store = Store::where('slug', $query)->first();
 
         if ($store) {
-                       $formattedSlug = str_replace(' ', '-', $store->slug);
-
-
-            return redirect()->route('employee.store.show', ['slug' => $formattedSlug ]);
+           return redirect()->route('employee.store.show',  $store->id);
         }
 
         // If no exact match, return JSON response for autocomplete if the request is AJAX
@@ -45,7 +42,7 @@ class SearchController extends Controller
 
         if ($store) {
             // If a single store is found, redirect to its details page
-            return redirect()->route('employee.store.show', ['slug' => Str::slug($store->slug)]);
+            return redirect()->route('employee.store.show', $store->id);
         }
 
         return view('employee.stores.search_results', ['stores' => $stores]);

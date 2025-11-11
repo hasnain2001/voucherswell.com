@@ -145,10 +145,10 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-3">
                                             <img class="rounded shadow-sm border"
-                                                 src="{{ asset('storage/' . $blog->image) }}"
+                                                 src="{{ asset('storage/blogs/' . $blog->image) }}"
                                                  style="width: 50px; height: 50px; object-fit: cover;"
                                                  alt="{{ $blog->name }}"
-                                                 onerror="this.src='{{ asset('admin/img/default-blog.png') }}'">
+                                                 onerror="this.src='{{ asset('assets/img/no-image-found.png') }}'">
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold">{{ Str::limit($blog->name, 50) }}</h6>

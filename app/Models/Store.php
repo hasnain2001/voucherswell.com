@@ -44,7 +44,10 @@ class Store extends Model
     'updated_at' => 'datetime',
     'created_at' => 'datetime',
     ];
-
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class, 'store_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -69,4 +72,14 @@ class Store extends Model
     {
         return $this->belongsTo(Network::class, 'network_id');
     }
+        public function getImageUrlAttribute()
+    {
+        if ($this->image && file_exists(storage_path('app/public/' . $this->image))) {
+            return asset('storage/' . $this->image);
+        }
+
+        // Optional: fallback image if none exists
+        return asset('assets/img/default-store.png');
+    }
+
 }

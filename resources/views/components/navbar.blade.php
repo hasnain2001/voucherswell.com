@@ -1,36 +1,39 @@
+
+
 <header class="sticky-top" id="header">
-    <nav class="navbar navbar-top align-items-center">
+    <!-- Top Bar -->
+    <nav class="navbar navbar-top">
         <div class="container">
-            <div class="row align-items-center w-100 g-3">
+            <div class="row w-100 align-items-center g-3">
+
                 <!-- Logo -->
                 <div class="col-4 col-md-2 text-start">
-                    <a class="navbar-brand d-inline-flex align-items-center" href="{{ url(app()->getlocale().'/') }}">
-                        <x-application-logo/>
+                    <a href="{{ url(app()->getLocale().'/') }}" class="d-block">
+                        <div class="logo-container mx-auto">
+                            <x-application-logo class="img-fluid"/>
+                        </div>
                     </a>
                 </div>
 
-                <!-- Mobile Language Dropdown & Menu Toggle -->
+                <!-- Mobile Controls -->
                 <div class="col-8 d-md-none text-end">
-                    <div class="d-flex align-items-center justify-content-end gap-3">
-                        <!-- Mobile Language Dropdown -->
+                    <div class="mobile-header-controls">
                         <div class="dropdown language-selector-mobile">
-                            <button class="btn dropdown-toggle d-flex align-items-center p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ asset('storage/' . $langs->firstWhere('code', app()->getLocale())->flag) }}" width="20" height="14" class="rounded shadow-sm" style="object-fit:cover;">
+                            <button class="btn dropdown-toggle d-flex align-items-center p-2" type="button" data-bs-toggle="dropdown">
+                                <img src="{{ asset('storage/flags/' . $langs->firstWhere('code', app()->getLocale())->flag) }}" width="22" height="16" class="rounded shadow-sm" style="object-fit:cover;">
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow">
                                 @foreach ($langs as $lang)
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url('/' . $lang->code) }}">
-                                        <img src="{{ asset('storage/' . $lang->flag) }}" width="20" height="14" class="rounded shadow-sm">
+                                        <img src="{{ asset('storage/flags/' . $lang->flag) }}" width="22" height="16" class="rounded shadow-sm">
                                         <span>{{ $lang->name }}</span>
                                     </a>
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
-
-                        <!-- Mobile Menu Toggle -->
-                        <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                        <button class="enhanced-toggler" id="mobileNavToggle">
                             <span class="toggler-icon"></span>
                             <span class="toggler-icon"></span>
                             <span class="toggler-icon"></span>
@@ -38,29 +41,39 @@
                     </div>
                 </div>
 
-                <!-- Search Box -->
-                <div class="col-12 col-md-6 order-1 order-md-0 mt-3 mt-md-0">
-                    <form class="d-flex search-box" action="{{ route('search') }}" method="GET">
-                        <input class="form-control search-input" type="search" name="query" id="searchInput" placeholder="@lang('nav.Search here')" aria-label="Search">
-                        <button class="search-button" type="submit">
-                            <i class="bi bi-search me-1"></i>
-                        </button>
-                    </form>
+                <!-- Search -->
+                <div class="col-12 col-md-8 order-1 order-md-0 mt-3 mt-md-0">
+                    <div class="search-container">
+                        <div class="search-box">
+                            <i class="bi bi-search search-icon"></i>
+                            <form action="{{ route('search') }}" method="GET" class="w-100">
+                                <input class="search-input" type="search" name="query" value="{{ old('query', request('query')) }}" placeholder="@lang('nav.Search here')" aria-label="Search" id="searchInput" >
+                                <button class="search-button" type="submit">
+                                    <span class="d-none d-sm-inline">Search</span>
+                                    <i class="bi bi-arrow-right-short d-sm-none"></i>
+                                </button>
+                            </form>
+                            <!-- Search suggestions container -->
+                            <div class="search-suggestions" id="searchSuggestions">
+                                <!-- Suggestions will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Desktop Language Dropdown -->
-                <div class="col-12 col-md-3 order-0 order-md-1 d-none d-md-flex justify-content-center justify-content-md-end">
+                <!-- Desktop Language -->
+                <div class="col-12 col-md-2 order-0 order-md-1 d-none d-md-flex justify-content-end">
                     <div class="dropdown language-selector">
-                        <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ asset('storage/' . $langs->firstWhere('code', app()->getLocale())->flag) }}" width="22" height="15" class="me-2 rounded shadow-sm" style="object-fit:cover;">
+                        <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                            <img src="{{ asset('storage/flags/' . $langs->firstWhere('code', app()->getLocale())->flag) }}" width="24" height="17" class="me-2 rounded shadow-sm">
                             <span class="fw-semibold">{{ $langs->firstWhere('code', app()->getLocale())->name }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
                             @foreach ($langs as $lang)
                             <li>
                                 <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url('/' . $lang->code) }}">
-                                    <img src="{{ asset('storage/' . $lang->flag) }}" width="22" height="15" class="rounded shadow-sm">
-                                    <span>{{ $lang->name }}  <small class="text-muted">({{ strtoupper($lang->code) }})</small></span>
+                                    <img src="{{ asset('storage/flags/' . $lang->flag) }}" width="24" height="17" class="rounded shadow-sm">
+                                    <span>{{ $lang->name }} <small class="text-muted">({{ strtoupper($lang->code) }})</small></span>
                                 </a>
                             </li>
                             @endforeach
@@ -71,135 +84,125 @@
         </div>
     </nav>
 
-    <!-- Main Navbar (Desktop Menu) -->
+    <!-- Desktop Main Nav -->
     <nav class="navbar navbar-expand-lg navbar-main shadow text-uppercase d-none d-md-block">
         <div class="container">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url(app()->getlocale().'/') }}">
-                            <i class="bi bi-house-door me-1"></i> @lang('nav.home')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('stores', ['lang' => app()->getLocale()]) }}">
-                            <i class="bi bi-shop me-1"></i>  @lang('nav.stores')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('category', ['lang' => app()->getLocale()]) }}">
-                            <i class="bi bi-grid-3x3-gap-fill me-1"></i>@lang('nav.cateories')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('coupons' ,['lang'=> app()->getlocale()]) }}">
-                            <i class="bi bi-ticket-perforated me-1"></i> @lang('nav.Coupons')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('deals' ,['lang'=> app()->getlocale()]) }}">
-                            <i class="bi bi-tags me-1"></i> @lang('nav.deal')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('blog' ,['lang'=> app()->getlocale()]) }}">
-                            <i class="bi bi-journal-text me-1"></i> @lang('nav.blogs')
-                        </a>
-                    </li>
+            <div class="collapse navbar-collapse justify-content-between">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link {{ request()->is(app()->getLocale()) || request()->is(app()->getLocale().'/') ? 'active' : '' }}" href="{{ url(app()->getLocale().'/') }}"><i class="bi bi-house-door"></i> @lang('nav.home')</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('*/stores*') ? 'active' : '' }}" href="{{ route('stores', ['lang' => app()->getLocale()]) }}"><i class="bi bi-shop"></i> @lang('nav.stores')</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('*/category*') ? 'active' : '' }}" href="{{ route('category', ['lang' => app()->getLocale()]) }}"><i class="bi bi-grid-3x3-gap-fill"></i> @lang('nav.cateories')</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('*/coupons*') ? 'active' : '' }}" href="{{ route('coupons', ['lang' => app()->getLocale()]) }}"><i class="bi bi-ticket-perforated"></i> @lang('nav.Coupons')</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('*/deals*') ? 'active' : '' }}" href="{{ route('deals', ['lang' => app()->getLocale()]) }}"><i class="bi bi-tags"></i> @lang('nav.deal')</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('*/blog*') ? 'active' : '' }}" href="{{ route('blog', ['lang' => app()->getLocale()]) }}"><i class="bi bi-journal-text"></i> @lang('nav.blogs')</a></li>
                 </ul>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex align-items-center gap-3">
+
+                    <!-- CATEGORIES DROPDOWN (SCROLLABLE) -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-grid-3x3-gap"></i> @lang('nav.cateories')
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg p-2 dropdown-menu-scrollable" style="min-width:240px; border-radius:12px;">
+                            @forelse ($allcategories as $category)
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded"
+                                       href="{{ route('category.detail', ['slug' => Str::slug($category->slug)]) }}">
+                                        @if($category->icon)
+                                            <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}" width="18" height="18" class="rounded">
+                                        @else
+                                            <i class="bi bi-tag-fill text-primary"></i>
+                                        @endif
+                                        <span class="small fw-medium">{{ $category->name }}</span>
+                                    </a>
+                                </li>
+                            @empty
+                                <li><span class="dropdown-item text-muted small">@lang('nav.no_categories')</span></li>
+                            @endforelse
+                        </ul>
+                    </div>
+
+                    <!-- Auth Links -->
                     @auth
-                        <div class="icon-text">
-                            <i class="bi bi-speedometer2"></i>
-                            @if(auth()->user()->role === 'admin')
-                                <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">@lang('nav.Dashboard')</a>
-                            @elseif(auth()->user()->role === 'employee')
-                                <a href="{{ route('employee.dashboard') }}" class="text-decoration-none">@lang('nav.Dashboard')</a>
-                            @else
-                                <a href="{{ route('dashboard') }}" class="text-decoration-none">@lang('nav.Dashboard')</a>
-                            @endif
-                        </div>
+                        <a href="{{
+                            auth()->user()->role === 'admin' ? route('admin.dashboard') :
+                            (auth()->user()->role === 'employee' ? route('employee.dashboard') : route('dashboard'))
+                        }}" class="text-decoration-none text-dark fw-semibold">
+                            <i class="bi bi-speedometer2"></i> @lang('nav.Dashboard')
+                        </a>
                     @else
-                        <div class="icon-text">
-                            <i class="bi bi-power"></i>
-                            <a href="{{ route('login') }}" class="text-decoration-none">@lang('nav.Login')</a>
-                        </div>
-                        <div class="icon-text">
-                            <i class="bi bi-person-plus"></i>
-                            <a href="{{ route('register') }}" class="text-decoration-none">@lang('nav.register')</a>
-                        </div>
+                        <a href="{{ route('login') }}" class="text-decoration-none text-dark fw-semibold"><i class="bi bi-power"></i> @lang('nav.Login')</a>
+                        <a href="{{ route('register') }}" class="text-decoration-none text-dark fw-semibold"><i class="bi bi-person-plus"></i> @lang('nav.register')</a>
                     @endauth
                 </div>
             </div>
         </div>
     </nav>
-
-    <!-- Mobile Offcanvas Menu -->
-    <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <!-- Mobile Navigation -->
-            <ul class="navbar-nav mb-4">
-                <li class="nav-item">
-                    <a class="nav-link active d-flex align-items-center py-3" href="{{ url(app()->getlocale().'/') }}">
-                        <i class="bi bi-house-door me-3 fs-5"></i> @lang('nav.home')
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center py-3" href="{{ route('stores', ['lang' => app()->getLocale()]) }}">
-                        <i class="bi bi-shop me-3 fs-5"></i> @lang('nav.stores')
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center py-3" href="{{ route('category', ['lang' => app()->getLocale()]) }}">
-                        <i class="bi bi-grid-3x3-gap-fill me-3 fs-5"></i>@lang('nav.cateories')
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center py-3" href="{{ route('coupons' ,['lang'=> app()->getlocale()]) }}">
-                        <i class="bi bi-ticket-perforated me-3 fs-5"></i> @lang('nav.Coupons')
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center py-3" href="{{ route('deals' ,['lang'=> app()->getlocale()]) }}">
-                        <i class="bi bi-tags me-3 fs-5"></i> @lang('nav.deal')
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center py-3" href="{{ route('blog' ,['lang'=> app()->getlocale()]) }}">
-                        <i class="bi bi-journal-text me-3 fs-5"></i> @lang('nav.blogs')
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Mobile Auth Links -->
-            <div class="border-top pt-4">
-                @auth
-                    <div class="d-grid">
-                        <a href="{{
-                            auth()->user()->role === 'admin' ? route('admin.dashboard') :
-                            (auth()->user()->role === 'employee' ? route('employee.dashboard') : route('dashboard'))
-                        }}" class="btn btn-danger d-flex align-items-center justify-content-center py-3">
-                            <i class="bi bi-speedometer2 me-2"></i> @lang('nav.Dashboard')
-                        </a>
-                    </div>
-                @else
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('login') }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center py-3">
-                            <i class="bi bi-power me-2"></i> @lang('nav.Login')
-                        </a>
-                        <a href="{{ route('register') }}" class="btn btn-primary d-flex align-items-center justify-content-center py-3">
-                            <i class="bi bi-person-plus me-2"></i> @lang('nav.register')
-                        </a>
-                    </div>
-                @endauth
-            </div>
-        </div>
-    </div>
 </header>
 
+<!-- Mobile Navigation -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-container" id="mobileNavContainer">
+    <div class="mobile-nav-header position-relative">
+        <a href="{{ url(app()->getLocale().'/') }}" class="d-block">
+            <div class="mobile-logo-container">
+                <x-application-logo class="img-fluid"/>
+            </div>
+        </a>
+        <button class="mobile-close-btn" id="mobileNavClose">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
 
+    <!-- Mobile Search -->
+    <div class="mobile-search-container">
+        <form action="{{ route('search') }}" method="GET" class="w-100">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0" id="basic-addon1">
+                    <i class="bi bi-search text-primary"></i>
+                </span>
+                <input type="search" class="form-control border-start-0" name="query" placeholder="@lang('nav.Search here')" aria-label="Search">
+            </div>
+        </form>
+    </div>
+
+    <div class="flex-grow-1">
+        <a href="{{ url(app()->getLocale().'/') }}" class="mobile-nav-link active"><i class="bi bi-house-door"></i> <span>@lang('nav.home')</span></a>
+        <a href="{{ route('stores', ['lang' => app()->getLocale()]) }}" class="mobile-nav-link"><i class="bi bi-shop"></i> <span>@lang('nav.stores')</span></a>
+        <a href="{{ route('category', ['lang' => app()->getLocale()]) }}" class="mobile-nav-link"><i class="bi bi-grid-3x3-gap-fill"></i> <span>@lang('nav.cateories')</span></a>
+        <a href="{{ route('coupons', ['lang' => app()->getLocale()]) }}" class="mobile-nav-link"><i class="bi bi-ticket-perforated"></i> <span>@lang('nav.Coupons')</span></a>
+        <a href="{{ route('deals', ['lang' => app()->getLocale()]) }}" class="mobile-nav-link"><i class="bi bi-tags"></i> <span>@lang('nav.deal')</span></a>
+        <a href="{{ route('blog', ['lang' => app()->getLocale()]) }}" class="mobile-nav-link"><i class="bi bi-journal-text"></i> <span>@lang('nav.blogs')</span></a>
+    </div>
+
+    <div class="p-4 bg-light border-top">
+        <div class="small text-uppercase fw-bold text-muted mb-3">@lang('select language')</div>
+        <div class="d-grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
+            @foreach ($langs as $lang)
+            <a href="{{ url('/' . $lang->code) }}" class="btn btn-sm rounded d-flex align-items-center gap-2 p-3 text-start {{ app()->getLocale() === $lang->code ? 'btn-warning text-dark' : 'btn-outline-secondary' }}">
+                <img src="{{ asset('storage/flags/' . $lang->flag) }}" width="20" height="14" class="rounded">
+                <span class="small">{{ $lang->name }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="p-4 bg-light border-top">
+        @auth
+            <a href="{{
+                auth()->user()->role === 'admin' ? route('admin.dashboard') :
+                (auth()->user()->role === 'employee' ? route('employee.dashboard') : route('dashboard'))
+            }}" class="mobile-auth-btn btn-dashboard">
+                <i class="bi bi-speedometer2"></i> <span>@lang('nav.Dashboard')</span>
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="mobile-auth-btn btn-login">
+                <i class="bi bi-power"></i> <span>@lang('nav.Login')</span>
+            </a>
+            <a href="{{ route('register') }}" class="mobile-auth-btn btn-register">
+                <i class="bi bi-person-plus"></i> <span>@lang('nav.register')</span>
+            </a>
+        @endauth
+    </div>
+</div>

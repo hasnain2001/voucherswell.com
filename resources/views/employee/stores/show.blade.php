@@ -118,7 +118,7 @@
                     <div class="card-body">
                         <div class="text-center mb-4">
                             <img class="img-thumbnail rounded-circle border-4 border-primary shadow-sm"
-                                 src="{{ asset('storage/' . $store->image) }}"
+                                 src="{{ asset('storage/stores/' . $store->image) }}"
                                  style="width: 120px; height: 120px; object-fit: contain;"
                                  loading="lazy"
                                  alt="{{ $store->name }}"

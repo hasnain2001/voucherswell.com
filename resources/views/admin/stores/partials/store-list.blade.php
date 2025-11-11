@@ -1,10 +1,11 @@
   @foreach ($stores as $store)
                                 <tr id="store-row-{{ $store->id }}">
                                     <td><input type="checkbox" class="form-check-input select-checkbox" name="selected[]" value="{{ $store->id }}"></td>
+                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $store->id }}</td>
                                     <td>{{ $store->name }}</td>
                                     <td>{{ $store->slug }}</td>
-                                    <td><img src="{{ asset('storage/' . $store->image) }}" alt="{{ $store->name }}" class="img-thumbnail"></td>
+                                    <td><img src="{{ asset('storage/stores/' . $store->image) }}" alt="{{ $store->name }}" class="img-thumbnail" width="50" height="50" loading="lazy"></td>
                                     <td>{{ $store->category->name ?? 'N/A' }}</td>
                                     <td>{{ $store->network->title ?? 'N/A' }}</td>
                                     <td>{{ $store->language->name ?? 'N/A' }}</td>

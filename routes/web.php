@@ -21,8 +21,11 @@ use App\Http\Controllers\ContactController;
     Route::get('/terms', function () { return view('front-end.terms'); })->name('terms');
     Route::get('/about', function () { return view('front-end.about'); })->name('about');
     Route::get('/contact',[ContactController::class, 'index'])->name('contact');
+
+
         });
       });
+       Route::post('/contact',[ContactController::class, 'store'])->name('contact.store');
     Route::middleware([Localization::class])->group(function () {
         Route::controller(HomeController::class)->group(function () {
                 Route::get('/{lang?}', 'index')->name('home');

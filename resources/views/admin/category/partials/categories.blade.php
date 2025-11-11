@@ -5,7 +5,11 @@
     <td>{{ $category->slug }}</td>
          <td>
                                     @if($category->image)
-                                    <img src="{{ asset('storage/' . $category->image) }}"
+                                    <img src="{{ asset('storage/categories/' . $category->image) }}"
+                                         alt="{{ $category->name }}"
+                                         width="80"
+                                         height="80"
+                                         loading="lazy"
                                          class="img-thumbnail"
                                          style="width: 80px; height: 80px; object-fit: cover;">
                                     @else
