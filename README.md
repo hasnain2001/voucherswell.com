@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://Voucherswell.com" target="_blank">
-    <img src="/public/images/Voucherswell.PNG" width="800" alt="Voucherswell Banner">
+    <img src="/public/assets/img/git/banner.png" width="800" alt="Voucherswell Banner">
   </a>
   <br>
   <strong>Live URL: </strong> <a href="https://Voucherswell.com" target="_blank">https://Voucherswell.com</a>
@@ -57,11 +57,11 @@
   <h3>✨ Platform Highlights</h3>
   <table>
     <tr>
-      <td><img src="/public/images/admin.PNG" width="100%" alt="Admin Dashboard"></td>
-      <td><img src="/public/images/user.PNG" width="100%" alt="User Interface"></td>
+      <td><img src="/public/assets/img/git/admin.png" width="100%" alt="Admin Dashboard"></td>
+      <td><img src="/public/assets/img/git/user.png" width="100%" alt="User Interface"></td>
     </tr>
     <tr>
-      <td colspan="2"><img src="/public/images/employee.PNG" width="60%" alt="Employee Portal"></td>
+      <td colspan="2"><img src="/public/assets/img/git/employee.png" width="60%" alt="Employee Portal"></td>
     </tr>
   </table>
 </div>
